@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JOIN</title>
+</head>
+<body>
+<form th:method="post" th:object="${user}" th:action="@{/join}" onsubmit="return validatePassword()">
+    <label for="id">ID</label>
+    <input type="text" id="id" name="loginId" th:field="*{loginId}"/>
+    <span th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}"></span>
+
+    <label for="password">PASSWORD</label>
+    <input type="password" id="password" name="password" th:field="*{password}"/>
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+
+    <label for="name">NAME</label>
+    <input type="text" id="name" name="name" th:field="*{name}"/>
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+    <label for="email">EMAIL</label>
+    <input type="text" id="email" name="email" th:field="*{email}"/>
+    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+    <label for="phone">PHONE</label>
+    <input type="text" id="phone" name="phone" th:field="*{phone}"/>
+    <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+
+    <input type="submit" value="join"/>
+</form>
+</body>
+</html>
