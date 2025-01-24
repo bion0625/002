@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INTRANET:Booking Confirmation</title>
+</head>
+<body>
+<div>
+    <a href="/">HOME</a>
+    <a href="#">download & history</a>
+    <a href="/BookingConfirmation/company">companies</a>
+    <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
+</div>
+<div>
+    <form th:action="@{/BookingConfirmation/company/insert}" th:method="post" th:object="${company}">
+        <label for="companyTitle">제목</label>
+        <input id="companyTitle" th:field="*{companyTitle}" type="text">
+        <span th:if="${#fields.hasErrors('companyTitle')}" th:errors="*{companyTitle}"></span>
+
+        <label for="companyName">회사명</label>
+        <input id="companyName" th:field="*{companyName}" type="text">
+        <span th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></span>
+
+        <label for="companyAddr">회사주소</label>
+        <input id="companyAddr" th:field="*{companyAddr}" type="text">
+        <span th:if="${#fields.hasErrors('companyAddr')}" th:errors="*{companyAddr}"></span>
+
+        <label for="companyInvoiceAcronym">인보이스 약어</label>
+        <input id="companyInvoiceAcronym" th:field="*{companyInvoiceAcronym}" type="text">
+        <span th:if="${#fields.hasErrors('companyInvoiceAcronym')}" th:errors="*{companyInvoiceAcronym}"></span>
+
+        <input type="submit" value="Confirm">
+    </form>
+</div>
+<script>
+    const title = document.querySelector("#companyTitle");
+    if (title.value !== "") title.readOnly = true;
+</script>
+</body>
+</html>

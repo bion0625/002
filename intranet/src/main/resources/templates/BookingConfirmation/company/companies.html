@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INTRANET:Booking Confirmation</title>
+</head>
+<body>
+<div>
+    <a href="/">HOME</a>
+    <a href="#">download & history</a>
+    <a href="/BookingConfirmation/company">companies</a>
+    <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
+</div>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>회사명</th>
+            <th>수정일</th>
+            <th>등록일</th>
+            <th>삭제버튼</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${items}">
+            <td>
+                <a th:href="@{/BookingConfirmation/company/{id}(id=${item.id})}"><span th:text="${item.companyTitle}">제목</span></a>
+            </td>
+            <td>
+                <span th:text="${item.companyName}">회사명</span>
+            </td>
+            <td>
+                <span th:text="${item.updatedAt}">수정일</span>
+            </td>
+            <td>
+                <span th:text="${item.createdAt}">등록일</span>
+            </td>
+            <td>
+                <form th:action="@{/BookingConfirmation/company/{id}(id=${item.id})}" th:method="post">
+                    <input type="submit" value="delete">
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/BookingConfirmation/company/insert">INSERT</a>
+</div>
+</body>
+</html>
