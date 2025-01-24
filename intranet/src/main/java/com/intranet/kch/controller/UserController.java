@@ -34,6 +34,13 @@ public class UserController {
     }
     @PostMapping("/join")
     public String join(@Valid @ModelAttribute("user") UserVo user, BindingResult result, SessionStatus status) {
+        if (userService.getUserByLoginId(user.getUsername()).isPresent()) {
+            result.rejectValue(
+                    "loginId",
+                    "duplicate.userForm.loginId",
+                    "이미 사용 중인 아이디입니다.");
+            return "user/join";
+        }
         if (result.hasErrors()) return "user/join";
         userService.join(user);
         status.setComplete();

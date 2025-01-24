@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
@@ -22,10 +24,13 @@ public class UserService implements UserDetailsService {
         userRepository.save(vo.toEntity(encoder));
     }
 
+    public Optional<UserVo> getUserByLoginId(String loginId) {
+        return userRepository.findByLoginIdAndDeletedAtIsNull(loginId).map(UserVo::fromEntity);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByLoginIdAndDeletedAtIsNull(username)
-                .map(UserVo::fromEntity)
+        return getUserByLoginId(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + "is not found !"));
     }
 }
