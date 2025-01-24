@@ -14,6 +14,10 @@
     <input type="password" id="password" name="password" th:field="*{password}"/>
     <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
 
+    <label for="passwordCheck">PASSWORD CHECK</label>
+    <input type="password" id="passwordCheck">
+    <span style="display:none;" id="passwordCheckMsg">비밀번호와 비밀번호 확인이 일치하지 않습니다.</span>
+
     <label for="name">NAME</label>
     <input type="text" id="name" name="name" th:field="*{name}"/>
     <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
@@ -28,5 +32,30 @@
 
     <input type="submit" value="join"/>
 </form>
+<script>
+    function validatePassword() {
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("passwordCheck").value;
+        if (password !== confirmPassword) {
+            alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            return false;
+        }
+        return true;
+    }
+
+    const passwordCheckHandler = () => {
+        const msg = document.querySelector("#passwordCheckMsg");
+        if (document.querySelector("#passwordCheck").value === document.querySelector("#password").value) {
+            msg.style.display = "none";
+        } else {
+            msg.style.display = "block";
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelector("#password").addEventListener("keyup", passwordCheckHandler);
+        document.querySelector("#passwordCheck").addEventListener("keyup", passwordCheckHandler);
+    });
+</script>
 </body>
 </html>
