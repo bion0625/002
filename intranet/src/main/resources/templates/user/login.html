@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Log In</title>
+    <title>LOGIN</title>
 </head>
 <body>
 <form th:method="post" th:action="@{/login}">
+    <h2>LOGIN</h2>
     <label for="id">ID</label>
     <input type="text" id="id" name="username"/>
     <label for="password">PASSWORD</label>
     <input type="password" id="password" name="password"/>
-    <input type="submit" value="login"/>
+    <input type="submit" value="LOGIN"/>
+    <button type="button" onclick="window.location.href='/join'">JOIN</button>
 </form>
 </body>
 </html>
