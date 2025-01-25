@@ -35,10 +35,10 @@
         <input id="guestName" th:field="*{guestName}" type="text" required>
 
         <label for="checkIn">checkIn</label>
-        <input id="checkIn" th:field="*{checkIn}" type="text" required>
+        <input id="checkIn" th:field="*{checkIn}" type="datetime-local" required>
 
         <label for="checkOut">checkOut</label>
-        <input id="checkOut" th:field="*{checkOut}" type="text" required>
+        <input id="checkOut" th:field="*{checkOut}" type="datetime-local" required>
 
         <label for="apartmentType">apartmentType</label>
         <input id="apartmentType" th:field="*{apartmentType}" type="text" required>
@@ -74,7 +74,7 @@
         <input id="notice" th:field="*{notice}" type="text" required>
 
         <label for="signedDate">signedDate</label>
-        <input id="signedDate" th:field="*{signedDate}" type="text" required>
+        <input id="signedDate" th:field="*{signedDate}" type="date" required>
 
         <label for="service">service</label>
         <input id="service" th:field="*{service}" type="text" required>
@@ -114,9 +114,10 @@
             document.querySelector("#companyId").value = company.options[company.selectedIndex].dataset.id;
             const now = new Date();
             const time = String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0'); // 두 자리로 포맷
+            const date = String(now.getDate()).padStart(2, '0');
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const year = now.getFullYear().toString().slice(-2);
-            titleInit.value = company.options[company.selectedIndex].dataset.acronym + time + month + year;
+            titleInit.value = company.options[company.selectedIndex].dataset.acronym + time + date + month + year;
             title.value = titleInit.value;
         } else {
             document.querySelector("#companyBox").style = "display: none;";

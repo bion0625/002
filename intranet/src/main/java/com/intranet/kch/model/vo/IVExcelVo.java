@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IVExcelVo {
+
     private String name;
     private Long nights;
 
-    public IVExcelEntity toEntity(Long price, Long bcId) {// TODO 추후 날짜 작업 추가
+    public IVExcelEntity toEntity(Long price, Long bcId, String title) {
         IVExcelEntity entity = new IVExcelEntity();
-        entity.setName(this.name);
+        entity.setName(title + "_" + this.name);
         entity.setNights(this.nights);
         entity.setTotalPrice(price * this.nights);
         entity.setBcId(bcId);
@@ -22,6 +23,6 @@ public class IVExcelVo {
     }
 
     public static IVExcelVo fromEntity(IVExcelEntity entity) {
-        return new IVExcelVo(entity.getName(), entity.getNights());
+        return new IVExcelVo(entity.getName().substring(entity.getName().lastIndexOf("M")), entity.getNights());
     }
 }

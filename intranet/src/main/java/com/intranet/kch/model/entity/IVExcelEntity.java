@@ -6,6 +6,9 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -15,9 +18,9 @@ public class IVExcelEntity extends Base {
     private Long bcId;
     private String name;
     private Long nights;
-    private String invoiceDate;
+    private LocalDate invoiceDate;
     private String title;
-    private String startDate;
-    private String endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private Long totalPrice;
 }

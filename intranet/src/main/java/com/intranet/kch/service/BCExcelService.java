@@ -1,6 +1,7 @@
 package com.intranet.kch.service;
 
 import com.intranet.kch.model.entity.BCExcelEntity;
+import com.intranet.kch.model.entity.IVExcelEntity;
 import com.intranet.kch.model.vo.BCExcelVo;
 import com.intranet.kch.model.vo.IVExcelVo;
 import com.intranet.kch.repository.BCExcelRepository;
@@ -8,7 +9,9 @@ import com.intranet.kch.repository.IVExcelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -50,17 +53,35 @@ public class BCExcelService {
 
                             deleteInVoiceListByBCId(entity.getId());
 
-                            saveInVoiceList(vo.getIvExcelVos(), vo.getPrice(), entity.getId());
+                            saveInVoiceList(vo.getIvExcelVos(), vo.getTitle(), vo.getPrice(), entity.getId(), vo.getTotalNights(), vo.getCheckIn(), vo.getSignedDate());
                         },
                         () -> {
                             BCExcelEntity bcEntity = bcExcelRepository.save(vo.toEntity());
-                            saveInVoiceList(vo.getIvExcelVos(), vo.getPrice(), bcEntity.getId());
+                            saveInVoiceList(vo.getIvExcelVos(), vo.getTitle(), vo.getPrice(), bcEntity.getId(), vo.getTotalNights(), vo.getCheckIn(), vo.getSignedDate());
                         }
                 );
     }
 
-    private void saveInVoiceList(List<IVExcelVo> ivExcelVos, Long price, Long bcId) {
-        ivExcelRepository.saveAll(ivExcelVos.stream().map(iv -> iv.toEntity(price, bcId)).toList());
+    private void saveInVoiceList(List<IVExcelVo> ivExcelVos, String title, Long price, Long bcId, Long totalNights, String start, String signedDate) {
+        LocalDateTime startDate = LocalDateTime.parse(start);
+        List<IVExcelEntity> list = ivExcelVos.stream()
+                .sorted(Comparator.comparing(IVExcelVo::getName))
+                .map(iv -> iv.toEntity(price, bcId, title))
+                .toList();
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setStartDate(startDate);
+            LocalDateTime endDate = startDate.plusDays(list.get(i).getNights());
+            list.get(i).setEndDate(endDate);
+
+            if (i == 0) {
+                LocalDate invoiceDate = LocalDate.parse(signedDate);
+                list.get(i).setInvoiceDate(invoiceDate);
+            } else list.get(i).setInvoiceDate(startDate.toLocalDate().withDayOfMonth(1));
+
+            totalNights -= list.get(i).getNights();
+            startDate = endDate;
+        }
+        ivExcelRepository.saveAll(list);
     }
 
     public List<BCExcelVo> getAll() {

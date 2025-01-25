@@ -26,7 +26,7 @@ public class BCExcelEntity extends Base {
     private String koreanAddress;
     private String totalRent;
     private Long price;
-    private String totalNights;
+    private Long totalNights;
     private String ofGuests;
     private String bookedBy;
     private String bookingRequestCompany;

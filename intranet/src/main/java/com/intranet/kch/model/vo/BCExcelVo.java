@@ -30,7 +30,7 @@ public class BCExcelVo {
     private String koreanAddress;
     private String totalRent;
     private Long price;
-    private String totalNights;
+    private Long totalNights;
     private String ofGuests;
     private String bookedBy;
     private String bookingRequestCompany;
