@@ -6,9 +6,15 @@ import com.intranet.kch.model.vo.BCExcelVo;
 import com.intranet.kch.model.vo.IVExcelVo;
 import com.intranet.kch.repository.BCExcelRepository;
 import com.intranet.kch.repository.IVExcelRepository;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -60,6 +66,32 @@ public class BCExcelService {
                             saveInVoiceList(vo.getIvExcelVos(), vo.getTitle(), vo.getPrice(), bcEntity.getId(), vo.getTotalNights(), vo.getCheckIn(), vo.getSignedDate());
                         }
                 );
+    }
+
+    public byte[] generateExcel(BCExcelVo bcExcelVo) {
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet("Booking Confirmation");
+
+            // 헤더 작성
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("Property Name");
+            headerRow.createCell(1).setCellValue("Guest Name");
+            headerRow.createCell(2).setCellValue("Check-In");
+            headerRow.createCell(3).setCellValue("Check-Out");
+
+            // 데이터 작성
+            Row dataRow = sheet.createRow(1);
+            dataRow.createCell(0).setCellValue(bcExcelVo.getPropertyName());
+            dataRow.createCell(1).setCellValue(bcExcelVo.getGuestName());
+            dataRow.createCell(2).setCellValue(bcExcelVo.getCheckIn());
+            dataRow.createCell(3).setCellValue(bcExcelVo.getCheckOut());
+
+            // 엑셀 데이터를 바이트 배열로 반환
+            workbook.write(out);
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to generate Excel file", e);
+        }
     }
 
     private void saveInVoiceList(List<IVExcelVo> ivExcelVos, String title, Long price, Long bcId, Long totalNights, String start, String signedDate) {
