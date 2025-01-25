@@ -26,7 +26,7 @@ public class CompanyController {
     @GetMapping
     public String company(Model model) {
         model.addAttribute("items", companyService.getAll());
-        return "BookingConfirmation/company/companies";
+        return "BookingConfirmation/company/list";
     }
     @GetMapping("/insert")
     public String detail() {
