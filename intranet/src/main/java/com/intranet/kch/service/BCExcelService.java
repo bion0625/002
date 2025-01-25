@@ -10,11 +10,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -69,28 +71,26 @@ public class BCExcelService {
     }
 
     public byte[] generateExcel(BCExcelVo bcExcelVo) {
-        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet("Booking Confirmation");
+        try (InputStream templateStream = new ClassPathResource("templates/test.xlsx").getInputStream();
+             Workbook workbook = new XSSFWorkbook(templateStream);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-            // 헤더 작성
-            Row headerRow = sheet.createRow(0);
-            headerRow.createCell(0).setCellValue("Property Name");
-            headerRow.createCell(1).setCellValue("Guest Name");
-            headerRow.createCell(2).setCellValue("Check-In");
-            headerRow.createCell(3).setCellValue("Check-Out");
+            // 템플릿의 첫 번째 시트를 가져오기
+            Sheet sheet = workbook.getSheetAt(0);
 
-            // 데이터 작성
-            Row dataRow = sheet.createRow(1);
-            dataRow.createCell(0).setCellValue(bcExcelVo.getPropertyName());
-            dataRow.createCell(1).setCellValue(bcExcelVo.getGuestName());
-            dataRow.createCell(2).setCellValue(bcExcelVo.getCheckIn());
-            dataRow.createCell(3).setCellValue(bcExcelVo.getCheckOut());
+            // 특정 셀에 값 설정
+            Row row1 = sheet.getRow(2); // 세 번째 행
+            if (row1 == null) row1 = sheet.createRow(2);
 
-            // 엑셀 데이터를 바이트 배열로 반환
+            row1.createCell(0).setCellValue(bcExcelVo.getPropertyName());
+            row1.createCell(1).setCellValue(bcExcelVo.getGuestName());
+            row1.createCell(2).setCellValue(bcExcelVo.getCheckIn());
+            row1.createCell(3).setCellValue(bcExcelVo.getCheckOut());
+
             workbook.write(out);
             return out.toByteArray();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to generate Excel file", e);
+            throw new RuntimeException("Failed to generate Excel file from template", e);
         }
     }
 

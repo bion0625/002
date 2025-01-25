@@ -63,8 +63,7 @@ public class BCExcelController {
             response.setContentType("application/zip");
             response.setHeader("Content-Disposition", "attachment; filename=\"excel_files.zip\"");
 
-            // ZIP 파일을 HTTP 응답으로 전송
-            zos.close();
+            zos.finish();
             outputStream.write(zipOutputStream.toByteArray());
             outputStream.flush();
         } catch (IOException e) {
