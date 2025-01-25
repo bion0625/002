@@ -40,7 +40,6 @@ public class CompanyVo {
                 entity.getCompanyAddr(),
                 entity.getCompanyInvoiceAcronym(),
                 DateFormatUtil.localDateTimeToString(entity.getCreatedAt(), "yyyy-MM-dd HH:mm:ss"),
-                entity.getUpdatedAt() == null ? "" :
-                        DateFormatUtil.localDateTimeToString(entity.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss"));
+                DateFormatUtil.localDateTimeToString(entity.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss"));
     }
 }

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INTRANET:Booking Confirmation</title>
+</head>
+<body>
+<nav>HOME > Booking Confirmation > EXCEL > DETAIL</nav>
+<div>
+    <a href="/">HOME</a>
+    <a href="/BookingConfirmation/excel">EXCEL</a>
+    <a href="/BookingConfirmation/company">COMPANY</a>
+    <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
+</div>
+<div>
+    <div id="companyBox">
+        <label for="company">COMPANY</label>
+        <select id="company">
+            <option th:data-id="${company.id}" th:data-acronym="${company.companyInvoiceAcronym}" th:each="company : ${companies}" th:text="${company.companyTitle}" th:value="${company.companyName}"></option>
+        </select>
+    </div>
+    <form th:action="@{/BookingConfirmation/excel/insert}" th:method="post" th:object="${excel}">
+        <label for="title">고유값</label>
+        <div id="titleBox">
+            <input id="title-init" readonly>
+            +
+            <input id="title-tail" type="text">
+        </div>
+        <input id="title" th:field="*{title}" type="hidden" required>
+
+        <label for="propertyName">propertyName</label>
+        <input id="propertyName" th:field="*{propertyName}" type="text" required>
+
+        <label for="guestName">guestName</label>
+        <input id="guestName" th:field="*{guestName}" type="text" required>
+
+        <label for="checkIn">checkIn</label>
+        <input id="checkIn" th:field="*{checkIn}" type="text" required>
+
+        <label for="checkOut">checkOut</label>
+        <input id="checkOut" th:field="*{checkOut}" type="text" required>
+
+        <label for="apartmentType">apartmentType</label>
+        <input id="apartmentType" th:field="*{apartmentType}" type="text" required>
+
+        <label for="apartmentAddress">apartmentAddress</label>
+        <input id="apartmentAddress" th:field="*{apartmentAddress}" type="text" required>
+
+        <label for="koreanAddress">koreanAddress</label>
+        <input id="koreanAddress" th:field="*{koreanAddress}" type="text" required>
+
+        <label for="totalRent">totalRent</label>
+        <input id="totalRent" th:field="*{totalRent}" type="text" required>
+
+        <label for="price">price</label>
+        <input id="price" th:field="*{price}" type="text" required>
+
+        <label for="totalNights">totalNights</label>
+        <input id="totalNights" th:field="*{totalNights}" type="text" required>
+
+        <label for="ofGuests">ofGuests</label>
+        <input id="ofGuests" th:field="*{ofGuests}" type="text" required>
+
+        <label for="bookedBy">bookedBy</label>
+        <input id="bookedBy" th:field="*{bookedBy}" type="text" readonly required>
+
+        <label for="bookingRequestCompany">bookingRequestCompany</label>
+        <input id="bookingRequestCompany" th:field="*{bookingRequestCompany}" type="text" required>
+
+        <label for="extensionOfLease">extensionOfLease</label>
+        <input id="extensionOfLease" th:field="*{extensionOfLease}" type="text" required>
+
+        <label for="notice">notice</label>
+        <input id="notice" th:field="*{notice}" type="text" required>
+
+        <label for="signedDate">signedDate</label>
+        <input id="signedDate" th:field="*{signedDate}" type="text" required>
+
+        <label for="service">service</label>
+        <input id="service" th:field="*{service}" type="text" required>
+
+        <label for="remarks01">remarks01</label>
+        <input id="remarks01" th:field="*{remarks01}" type="text" required>
+
+        <label for="remarks02">remarks02</label>
+        <input id="remarks02" th:field="*{remarks02}" type="text" required>
+
+        <input id="companyId" th:field="*{companyId}" type="hidden">
+
+        <input type="submit" value="Download">
+    </form>
+</div>
+<script>
+    const title = document.querySelector("#title");
+    const titleInit = document.querySelector("#title-init");
+    const titleTail = document.querySelector("#title-tail");
+
+    // 회사명 자동 입력
+    const company = document.querySelector("#company");
+    const companyNameHandler = () => {
+        const companyName = company.value;
+        if (companyName!=="") {
+            document.querySelector("#bookedBy").value = companyName;
+            document.querySelector("#companyId").value = company.options[company.selectedIndex].dataset.id;
+            const now = new Date();
+            const time = String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0'); // 두 자리로 포맷
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear().toString().slice(-2);
+            titleInit.value = company.options[company.selectedIndex].dataset.acronym + time + month + year;
+            title.value = titleInit.value;
+        } else {
+            document.querySelector("#companyBox").style = "display: none;";
+            document.querySelector("#titleBox").style = "display: none;";
+            title.type = "text";
+            title.readOnly = true;
+        }
+    }
+    company.addEventListener("change", companyNameHandler);
+    companyNameHandler();
+
+
+    titleTail.addEventListener("keyup", () => title.value = titleInit.value + titleTail.value);
+</script>
+</body>
+</html>
