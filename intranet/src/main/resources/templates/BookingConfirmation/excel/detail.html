@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>INTRANET:Booking Confirmation</title>
+    <link rel="stylesheet" th:href="@{/css/intranet.css}"/>
 </head>
 <body>
 <nav>HOME > Booking Confirmation > EXCEL > DETAIL</nav>
@@ -22,7 +23,7 @@
     <form th:action="@{/BookingConfirmation/excel/insert}" th:method="post" th:object="${excel}" onsubmit="return validateSumNights()">
         <label for="title">고유값</label>
         <div id="titleBox">
-            <input id="title-init" readonly>
+            <input id="title-init" type="text" readonly>
             +
             <input id="title-tail" type="text">
         </div>

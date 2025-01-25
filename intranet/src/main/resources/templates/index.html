@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>INTRANET:HOME</title>
+    <link rel="stylesheet" th:href="@{/css/intranet.css}"/>
 </head>
 <body>
 <nav>HOME</nav>
@@ -10,6 +11,6 @@
     <a href="/BookingConfirmation">Booking Confirmation</a>
     <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
 </div>
-<p>Welcome !</p>
+<p>Welcome to <strong>KCH!</strong></p>
 </body>
 </html>
