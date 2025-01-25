@@ -1,6 +1,7 @@
 package com.intranet.kch.controller.bookingConfirmation;
 
 import com.intranet.kch.model.vo.BCExcelVo;
+import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.service.BCExcelService;
 import com.intranet.kch.service.CompanyService;
 import jakarta.servlet.ServletOutputStream;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -39,8 +41,10 @@ public class BCExcelController {
         return "BookingConfirmation/excel/list";
     }
     @GetMapping("/insert")
-    public String detail(Model model) {
-        model.addAttribute("companies", companyService.getAll());
+    public String detail(Model model) throws Exception {
+        List<CompanyVo> companies = companyService.getAll();
+        if (companies.isEmpty()) throw new Exception("Company registration is required!");
+        model.addAttribute("companies", companies);
         return "BookingConfirmation/excel/detail";
     }
     @PostMapping("/insert")
