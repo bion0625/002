@@ -1,7 +1,10 @@
 package com.intranet.kch.service;
 
+import com.intranet.kch.model.entity.BCExcelEntity;
 import com.intranet.kch.model.vo.BCExcelVo;
+import com.intranet.kch.model.vo.IVExcelVo;
 import com.intranet.kch.repository.BCExcelRepository;
+import com.intranet.kch.repository.IVExcelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +15,11 @@ import java.util.List;
 @Service
 public class BCExcelService {
     private final BCExcelRepository bcExcelRepository;
+    private final IVExcelRepository ivExcelRepository;
 
-    public BCExcelService(BCExcelRepository companyRepository) {
+    public BCExcelService(BCExcelRepository companyRepository, IVExcelRepository ivExcelRepository) {
         this.bcExcelRepository = companyRepository;
+        this.ivExcelRepository = ivExcelRepository;
     }
 
     @Transactional
@@ -42,8 +47,20 @@ public class BCExcelService {
                             entity.setRemarks01(vo.getRemarks01());
                             entity.setRemarks02(vo.getRemarks02());
                             entity.setUpdatedAt(LocalDateTime.now());
+
+                            deleteInVoiceListByBCId(entity.getId());
+
+                            saveInVoiceList(vo.getIvExcelVos(), vo.getPrice(), entity.getId());
                         },
-                        () -> bcExcelRepository.save(vo.toEntity()));
+                        () -> {
+                            BCExcelEntity bcEntity = bcExcelRepository.save(vo.toEntity());
+                            saveInVoiceList(vo.getIvExcelVos(), vo.getPrice(), bcEntity.getId());
+                        }
+                );
+    }
+
+    private void saveInVoiceList(List<IVExcelVo> ivExcelVos, Long price, Long bcId) {
+        ivExcelRepository.saveAll(ivExcelVos.stream().map(iv -> iv.toEntity(price, bcId)).toList());
     }
 
     public List<BCExcelVo> getAll() {
@@ -55,7 +72,15 @@ public class BCExcelService {
     public BCExcelVo getById(Long id) {
         return bcExcelRepository.findById(id)
                 .filter(entity -> entity.getDeletedAt() == null)
-                .map(BCExcelVo::fromEntity)
+                .map(bc -> {
+                    BCExcelVo vo = BCExcelVo.fromEntity(bc);
+                    vo.setIvExcelVos(
+                            ivExcelRepository.findByBcIdAndDeletedAtIsNull(bc.getId()).stream()
+                                    .map(IVExcelVo::fromEntity)
+                                    .toList()
+                    );
+                    return vo;
+                })
                 .orElseThrow(() -> new RuntimeException(id + " is not found"));
     }
 
@@ -65,5 +90,11 @@ public class BCExcelService {
             entity.setDeletedAt(LocalDateTime.now());
             return entity;
         });
+        deleteInVoiceListByBCId(id);
+    }
+
+    private void deleteInVoiceListByBCId(Long bcId) {
+        ivExcelRepository.findByBcIdAndDeletedAtIsNull(bcId)
+                .forEach(iv -> iv.setDeletedAt(LocalDateTime.now()));
     }
 }

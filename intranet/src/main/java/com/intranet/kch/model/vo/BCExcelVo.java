@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +29,7 @@ public class BCExcelVo {
     private String apartmentAddress;
     private String koreanAddress;
     private String totalRent;
-    private String price;
+    private Long price;
     private String totalNights;
     private String ofGuests;
     private String bookedBy;
@@ -41,6 +44,8 @@ public class BCExcelVo {
     private String service;
     private String remarks01;
     private String remarks02;
+
+    private List<IVExcelVo> ivExcelVos;
 
     public BCExcelEntity toEntity() {
         BCExcelEntity entity = new BCExcelEntity();
@@ -93,6 +98,7 @@ public class BCExcelVo {
                 entity.getSignedDate(),
                 entity.getService(),
                 entity.getRemarks01(),
-                entity.getRemarks02());
+                entity.getRemarks02(),
+                new ArrayList<>());
     }
 }

@@ -19,7 +19,7 @@
             <option th:data-id="${company.id}" th:data-acronym="${company.companyInvoiceAcronym}" th:each="company : ${companies}" th:text="${company.companyTitle}" th:value="${company.companyName}"></option>
         </select>
     </div>
-    <form th:action="@{/BookingConfirmation/excel/insert}" th:method="post" th:object="${excel}">
+    <form th:action="@{/BookingConfirmation/excel/insert}" th:method="post" th:object="${excel}" onsubmit="return validateSumNights()">
         <label for="title">고유값</label>
         <div id="titleBox">
             <input id="title-init" readonly>
@@ -53,10 +53,10 @@
         <input id="totalRent" th:field="*{totalRent}" type="text" required>
 
         <label for="price">price</label>
-        <input id="price" th:field="*{price}" type="text" required>
+        <input id="price" th:field="*{price}" type="number" required>
 
         <label for="totalNights">totalNights</label>
-        <input id="totalNights" th:field="*{totalNights}" type="text" required>
+        <input id="totalNights" th:field="*{totalNights}" type="number" required>
 
         <label for="ofGuests">ofGuests</label>
         <input id="ofGuests" th:field="*{ofGuests}" type="text" required>
@@ -86,6 +86,16 @@
         <input id="remarks02" th:field="*{remarks02}" type="text" required>
 
         <input id="companyId" th:field="*{companyId}" type="hidden">
+
+        <div id="ivExcels">
+            <label>IV Excels</label>
+            <div th:each="ivExcel, iterStat : *{ivExcelVos}">
+                <input th:field="*{ivExcelVos[__${iterStat.index}__].name}" placeholder="Name" type="text" required />
+                <input th:field="*{ivExcelVos[__${iterStat.index}__].nights}" placeholder="Nights" type="number" required />
+            </div>
+        </div>
+        <button type="button" onclick="addIVExcel()">Add InVoice</button>
+        <button type="button" id="ivExcelsReset">reset</button>
 
         <input type="submit" value="Download">
     </form>
@@ -120,6 +130,41 @@
 
 
     titleTail.addEventListener("keyup", () => title.value = titleInit.value + titleTail.value);
+
+    // 인보이스 페이지 추가
+    function addIVExcel() {
+        const ivExcelsDiv = document.getElementById("ivExcels");
+        const newDiv = document.createElement("div");
+
+        const index = ivExcelsDiv.childElementCount; // 현재 항목 수
+        newDiv.innerHTML = `
+        <input id="ivExcelVos`+(index-1)+`.name" name="ivExcelVos[${index-1}].name" placeholder="Name" type="text" readonly required value="M`+index+`"/>
+        <input id="ivExcelVos`+(index-1)+`.nights" name="ivExcelVos[${index-1}].nights" placeholder="Nights" type="number" required />
+    `;
+        ivExcelsDiv.appendChild(newDiv);
+    }
+
+    // 인보이스 리셋
+    document.querySelector("#ivExcelsReset").addEventListener("click" , () => {
+        document.querySelector("#ivExcels").innerHTML='<label>IV Excels</label>';
+    })
+
+    // submit시 날짜 정합성 확인
+    function validateSumNights() {
+        const totalNights = Number(document.querySelector("#totalNights").value);
+        const inputs = Array.from(document.querySelectorAll('input[name^="ivExcelVos"][name$=".nights"]'));
+
+        const sum = inputs.reduce((total, input) => {
+            const value = parseFloat(input.value); // 숫자로 변환
+            return total + (isNaN(value) ? 0 : value); // 유효한 숫자만 누적
+        }, 0);
+
+        if (totalNights !== sum) {
+            alert("totalNights 와 invoice의 합계가 맞지 않습니다.");
+            return false;
+        }
+        return true;
+    }
 </script>
 </body>
 </html>
