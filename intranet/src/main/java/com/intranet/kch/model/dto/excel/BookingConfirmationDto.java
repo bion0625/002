@@ -1,6 +1,7 @@
 package com.intranet.kch.model.dto.excel;
 
 import com.intranet.kch.model.entity.BCExcelEntity;
+import com.intranet.kch.util.DateFormatUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -33,8 +34,8 @@ public class BookingConfirmationDto {
         return new BookingConfirmationDto(
                 entity.getPropertyName(),
                 entity.getGuestName(),
-                entity.getCheckIn().toString(),//TODO
-                entity.getCheckOut().toString(),//TODO
+                DateFormatUtil.stringToLocalDateTimeString(entity.getCheckIn(), "MMMM dd, yyyy hh:mm a"),
+                DateFormatUtil.stringToLocalDateTimeString(entity.getCheckOut(), "MMMM dd, yyyy hh:mm a"),
                 entity.getApartmentType(),
                 entity.getApartmentAddress(),
                 entity.getKoreanAddress(),
@@ -46,7 +47,7 @@ public class BookingConfirmationDto {
                 entity.getBookingRequestCompany(),
                 entity.getExtensionOfLease(),
                 entity.getNotice(),
-                entity.getSignedDate(),
+                DateFormatUtil.stringToLocalDateString(entity.getSignedDate(), "MMMM dd, yyyy"),
                 new ArrayList<>()
         );
     }

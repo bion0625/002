@@ -1,6 +1,7 @@
 package com.intranet.kch.model.dto.excel;
 
 import com.intranet.kch.model.entity.IVExcelEntity;
+import com.intranet.kch.util.DateFormatUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -35,9 +36,9 @@ public class InVoiceDto {
         return new InVoiceDto(
                 entity.getName(),
                 entity.getNights().toString(),
-                entity.getInvoiceDate().toString(),//TODO
-                entity.getStartDate().toString(),//TODO
-                entity.getEndDate().toString(),//TODO
+                DateFormatUtil.localDateToString(entity.getInvoiceDate(), "dd MMMM yyyy"),
+                DateFormatUtil.localDateToString(entity.getStartDate().toLocalDate(), "MMMM dd, yyyy"),
+                DateFormatUtil.localDateToString(entity.getEndDate().toLocalDate(), "MMMM dd, yyyy"),
                 entity.getTotalPrice().toString()
         );
     }

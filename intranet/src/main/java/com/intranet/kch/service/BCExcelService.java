@@ -73,7 +73,7 @@ public class BCExcelService {
         BookingConfirmationDto bookingConfirmationDto = BookingConfirmationDto.fromEntity(savedEntity);
 
         CompanyVo company = companyService.getById(savedEntity.getCompanyId());
-        List<InVoiceDto> inVoiceDtos = saveInVoiceList(vo.getIvExcelVos(), vo.getTitle(), vo.getPrice(), savedEntity.getId(), vo.getTotalNights(), vo.getCheckIn(), vo.getSignedDate()).stream()
+        List<InVoiceDto> inVoiceDtos = saveInVoiceList(vo.getIvExcelVos(), vo.getTitle(), vo.getPrice(), savedEntity.getId(), vo.getTotalNights(), vo.getCheckIn(), vo.getCheckOut(), vo.getSignedDate()).stream()
                 .peek(ivDto -> {
                     ivDto.setService(savedEntity.getService());
                     ivDto.setRemarks01(savedEntity.getRemarks01());
@@ -87,7 +87,7 @@ public class BCExcelService {
         return bookingConfirmationDto;
     }
 
-    private List<InVoiceDto> saveInVoiceList(List<IVExcelVo> ivExcelVos, String title, Long price, Long bcId, Long totalNights, String start, String signedDate) {
+    private List<InVoiceDto> saveInVoiceList(List<IVExcelVo> ivExcelVos, String title, Long price, Long bcId, Long totalNights, String start, String end, String signedDate) {
         LocalDateTime startDate = LocalDateTime.parse(start);
         List<IVExcelEntity> list = ivExcelVos.stream()
                 .sorted(Comparator.comparing(IVExcelVo::getName))
@@ -96,6 +96,9 @@ public class BCExcelService {
         for (int i = 0; i < list.size(); i++) {
             list.get(i).setStartDate(startDate);
             LocalDateTime endDate = startDate.plusDays(list.get(i).getNights());
+
+            if (i == list.size()-1) endDate = LocalDateTime.parse(end); // 마지막 날 checkout 일정시간만 계산 외로 적용
+
             list.get(i).setEndDate(endDate);
 
             if (i == 0) {
