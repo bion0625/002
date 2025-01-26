@@ -1,5 +1,7 @@
 package com.intranet.kch.controller.bookingConfirmation;
 
+import com.intranet.kch.model.dto.excel.BookingConfirmationDto;
+import com.intranet.kch.model.dto.excel.InVoiceDto;
 import com.intranet.kch.model.vo.BCExcelVo;
 import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.service.BCExcelService;
@@ -49,15 +51,19 @@ public class BCExcelController {
     }
     @PostMapping("/insert")
     public void save(@ModelAttribute("excel") BCExcelVo bcExcelVo, HttpServletResponse response, SessionStatus status) {
-        bcExcelService.saveOrUpdate(bcExcelVo);
+        BookingConfirmationDto bookingConfirmationDto = bcExcelService.saveOrUpdate(bcExcelVo);
         try (ServletOutputStream outputStream = response.getOutputStream();
              ByteArrayOutputStream zipOutputStream = new ByteArrayOutputStream();
              ZipOutputStream zos = new ZipOutputStream(zipOutputStream)) {
 
             // 엑셀 파일 생성 및 추가
-            byte[] excelData = bcExcelService.generateExcel(bcExcelVo);
-            addFileToZip("booking_confirmation1.xlsx", excelData, zos);
-            addFileToZip("booking_confirmation2.xlsx", excelData, zos);
+            byte[] bcExcelData = bcExcelService.generateBCExcel(bookingConfirmationDto);
+            addFileToZip(bcExcelVo.getTitle() + "_booking_confirmation.xlsx", bcExcelData, zos);
+
+            for (InVoiceDto inVoiceDto : bookingConfirmationDto.getInVoiceDtos()) {
+                byte[] ivExcelData = bcExcelService.generateIVExcel(inVoiceDto);
+                addFileToZip(inVoiceDto.getName() + ".xlsx", ivExcelData, zos);
+            }
 
             // ZIP 파일 다운로드 설정
             response.setContentType("application/zip");
@@ -72,6 +78,7 @@ public class BCExcelController {
             status.setComplete();
         }
     }
+    // TODO
     private void addFileToZip(String fileName, byte[] fileData, ZipOutputStream zos) throws IOException {
         ZipEntry zipEntry = new ZipEntry(fileName);
         zos.putNextEntry(zipEntry);

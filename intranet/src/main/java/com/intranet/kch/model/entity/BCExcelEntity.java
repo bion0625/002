@@ -1,5 +1,6 @@
 package com.intranet.kch.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
 public class BCExcelEntity extends Base {
     @Id @GeneratedValue
     private Long id;
+    @Column(unique = true)
     private String title;
     private Long companyId;
     /**

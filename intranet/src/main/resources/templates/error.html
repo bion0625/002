@@ -8,9 +8,9 @@
 <body>
 <nav>HOME</nav>
 <div>
-    <p th:text="${errorMessage}"></p>
     <a href="/BookingConfirmation">Booking Confirmation</a>
     <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
+    <p th:text="${errorMessage}"></p>
 </div>
 </body>
 </html>

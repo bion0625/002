@@ -19,7 +19,6 @@ public class IVExcelEntity extends Base {
     private String name;
     private Long nights;
     private LocalDate invoiceDate;
-    private String title;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Long totalPrice;
