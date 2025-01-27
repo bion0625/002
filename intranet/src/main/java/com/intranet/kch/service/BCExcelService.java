@@ -9,7 +9,10 @@ import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.model.vo.IVExcelVo;
 import com.intranet.kch.repository.BCExcelRepository;
 import com.intranet.kch.repository.IVExcelRepository;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -110,7 +113,6 @@ public class BCExcelService {
         return ivExcelRepository.saveAll(list).stream().map(InVoiceDto::fromEntity).toList();
     }
 
-    // TODO
     public byte[] generateBCExcel(BookingConfirmationDto dto) {
         try (InputStream templateStream = new ClassPathResource("templates/excelFile/BookingConfirmation.xlsx").getInputStream();
              Workbook workbook = new XSSFWorkbook(templateStream);
@@ -119,44 +121,8 @@ public class BCExcelService {
             // 템플릿의 첫 번째 시트를 가져오기
             Sheet sheet = workbook.getSheetAt(0);
 
-            // 스타일 생성
-            CellStyle cellStyle = workbook.createCellStyle();
-            Font font = workbook.createFont();
-            font.setBold(true); // 볼드 처리
-            font.setUnderline(Font.U_SINGLE); // 밑줄
-            cellStyle.setFont(font);
-            cellStyle.setVerticalAlignment(VerticalAlignment.TOP); // 수직 윗쪽 정렬
-            cellStyle.setWrapText(true); // 자동 줄바꿈
-
             // 특정 셀에 값 설정
-            createCell(sheet, 14, 3, dto.getPropertyName(), cellStyle);
-            createCell(sheet, 17, 3, dto.getGuestName(), cellStyle);
-            createCell(sheet, 18, 3, dto.getCheckIn(), cellStyle);
-            createCell(sheet, 19, 3, dto.getCheckOut(), cellStyle);
-            createCell(sheet, 20, 3, dto.getApartmentType(), cellStyle);
-            createCell(sheet, 20, 3, dto.getApartmentType());
-            createCell(sheet, 21, 3, dto.getApartmentAddress());
-            createCell(sheet, 22, 3, dto.getKoreanAddress());
-            createCell(sheet, 23, 3, dto.getTotalRent(), cellStyle);
-            createCell(sheet, 24, 3,  "(USD" + dto.getPrice() + " X " + dto.getTotalNights() + "night)");
-            createCell(sheet, 26, 3,  dto.getOfGuests(), cellStyle);
-            createCell(sheet, 27, 3,  dto.getBookedBy());
-            createCell(sheet, 28, 3,  dto.getBookingRequestCompany(), cellStyle);
-            createCell(sheet, 32, 3,  dto.getExtensionOfLease(), cellStyle);
-
-            CellStyle noticeCellStyle = workbook.createCellStyle();
-            noticeCellStyle.setVerticalAlignment(VerticalAlignment.TOP); // 수직 윗쪽 정렬
-            createCell(sheet, 33, 3,  dto.getNotice(), noticeCellStyle);
-
-            createCell(sheet, 48, 3,  dto.getPropertyName(), cellStyle);
-
-            // 스타일 생성
-            CellStyle signedDateCellStyle = workbook.createCellStyle();
-            signedDateCellStyle.setVerticalAlignment(VerticalAlignment.TOP); // 수직 윗쪽 정렬
-            signedDateCellStyle.setWrapText(true); // 자동 줄바꿈
-            signedDateCellStyle.setAlignment(HorizontalAlignment.RIGHT); // 마지막 줄 우측 정렬
-
-            createCell(sheet, 56, 3,  "Signing Date: " + dto.getSignedDate(), signedDateCellStyle);
+            createSheetForBookingConfirmation(sheet, dto);
 
             workbook.write(out);
             return out.toByteArray();
@@ -174,13 +140,7 @@ public class BCExcelService {
             Sheet sheet = workbook.getSheetAt(0);
 
             // 특정 셀에 값 설정
-            Row row1 = sheet.getRow(2); // 세 번째 행
-            if (row1 == null) row1 = sheet.createRow(3);
-
-            row1.createCell(0).setCellValue(dto.getName());
-            row1.createCell(1).setCellValue(dto.getInvoiceDate());
-            row1.createCell(2).setCellValue(dto.getStartDate());
-            row1.createCell(3).setCellValue(dto.getEndDate());
+            createSheetForBookingConfirmation(sheet, dto);
 
             workbook.write(out);
             return out.toByteArray();
@@ -189,14 +149,45 @@ public class BCExcelService {
         }
     }
 
-    private Cell createCell(Sheet sheet, int r, int c, String value) {
-        Row row = sheet.getRow(r); // 행
-        Cell cell = row.createCell(c);
-        cell.setCellValue(value);
-        return cell;
+    private void createSheetForBookingConfirmation(Sheet sheet, BookingConfirmationDto dto) {
+        createCell(sheet, 14, 3, dto.getPropertyName());
+        createCell(sheet, 17, 3, dto.getGuestName());
+        createCell(sheet, 18, 3, dto.getCheckIn());
+        createCell(sheet, 19, 3, dto.getCheckOut());
+        createCell(sheet, 20, 3, dto.getApartmentType());
+        createCell(sheet, 20, 3, dto.getApartmentType());
+        createCell(sheet, 21, 3, dto.getApartmentAddress());
+        createCell(sheet, 22, 3, dto.getKoreanAddress());
+        createCell(sheet, 23, 3, dto.getTotalRent());
+        createCell(sheet, 24, 3,  "(USD" + dto.getPrice() + " X " + dto.getTotalNights() + "night)");
+        createCell(sheet, 26, 3,  dto.getOfGuests());
+        createCell(sheet, 27, 3,  dto.getBookedBy());
+        createCell(sheet, 28, 3,  dto.getBookingRequestCompany());
+        createCell(sheet, 32, 3,  dto.getExtensionOfLease());
+        createCell(sheet, 33, 3,  dto.getNotice());
+        createCell(sheet, 48, 3,  dto.getPropertyName());
+        createCell(sheet, 56, 3,  "Signing Date: " + dto.getSignedDate());
     }
-    private void createCell(Sheet sheet, int r, int c, String value, CellStyle cellStyle) {
-        createCell(sheet, r, c, value).setCellStyle(cellStyle);
+
+    private void createSheetForBookingConfirmation(Sheet sheet, InVoiceDto dto) {
+        createCell(sheet, 4, 3, dto.getInvoiceDate());
+        createCell(sheet, 6, 3, dto.getName());
+        createCell(sheet, 9, 7, dto.getCompanyName());
+        createCell(sheet, 10, 7, dto.getCompanyAddr());
+        createCell(sheet, 14, 1, dto.getService());
+        createCell(sheet, 14, 4, dto.getStartDate());
+        createCell(sheet, 14, 6, dto.getEndDate());
+        createCell(sheet, 14, 8, dto.getNights());
+        createCell(sheet, 14, 9, String.format("%,.2f", Double.parseDouble(dto.getTotalPrice())));
+        createCell(sheet, 25, 9, String.format("%,.2f", Double.parseDouble(dto.getTotalPrice())));
+        createCell(sheet, 35, 1, dto.getRemarks01());
+        createCell(sheet, 36, 1, dto.getRemarks02());
+    }
+
+    private void createCell(Sheet sheet, int r, int c, String value) {
+        Row row = sheet.getRow(r); // 행
+        Cell cell = row.getCell(c);
+        cell.setCellValue(value);
     }
 
     public List<BCExcelVo> getAll() {
