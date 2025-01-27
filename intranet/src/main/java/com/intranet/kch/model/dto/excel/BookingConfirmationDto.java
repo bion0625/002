@@ -19,7 +19,7 @@ public class BookingConfirmationDto {
     private String apartmentAddress;
     private String koreanAddress;
     private String totalRent;
-    private Long price;
+    private Double price;
     private Long totalNights;
     private String ofGuests;
     private String bookedBy;
@@ -34,8 +34,8 @@ public class BookingConfirmationDto {
         return new BookingConfirmationDto(
                 entity.getPropertyName(),
                 entity.getGuestName(),
-                DateFormatUtil.stringToLocalDateTimeString(entity.getCheckIn(), "MMMM dd, yyyy hh:mm a"),
-                DateFormatUtil.stringToLocalDateTimeString(entity.getCheckOut(), "MMMM dd, yyyy hh:mm a"),
+                DateFormatUtil.stringToLocalDateTimeString(entity.getCheckIn(), "MMMM dd, yyyy hh:mma"),
+                DateFormatUtil.stringToLocalDateTimeString(entity.getCheckOut(), "MMMM dd, yyyy hh:mma"),
                 entity.getApartmentType(),
                 entity.getApartmentAddress(),
                 entity.getKoreanAddress(),

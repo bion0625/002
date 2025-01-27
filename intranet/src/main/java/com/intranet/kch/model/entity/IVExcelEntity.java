@@ -21,5 +21,5 @@ public class IVExcelEntity extends Base {
     private LocalDate invoiceDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Long totalPrice;
+    private Double totalPrice;
 }

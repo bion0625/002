@@ -13,11 +13,11 @@ public class IVExcelVo {
     private String name;
     private Long nights;
 
-    public IVExcelEntity toEntity(Long price, Long bcId, String title) {
+    public IVExcelEntity toEntity(Double price, Long bcId, String title) {
         IVExcelEntity entity = new IVExcelEntity();
         entity.setName(title + "_" + this.name);
         entity.setNights(this.nights);
-        entity.setTotalPrice(price * this.nights);
+        entity.setTotalPrice(price * (double)this.nights);
         entity.setBcId(bcId);
         return entity;
     }

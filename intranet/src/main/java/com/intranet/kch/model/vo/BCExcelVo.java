@@ -29,7 +29,7 @@ public class BCExcelVo {
     private String apartmentAddress;
     private String koreanAddress;
     private String totalRent;
-    private Long price;
+    private Double price;
     private Long totalNights;
     private String ofGuests;
     private String bookedBy;
