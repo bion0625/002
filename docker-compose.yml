@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  postgres:
+  postgresIntranet:
     image: postgres:15
-    container_name: postgres_db
+    container_name: postgres_intranet_db
     environment:
       POSTGRES_USER: kch
       POSTGRES_PASSWORD: 12345
