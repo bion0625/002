@@ -1,6 +1,7 @@
 package com.intranet.kch.service;
 
 import com.intranet.kch.model.dto.excel.BookingConfirmationDto;
+import com.intranet.kch.model.dto.excel.ExcelDto;
 import com.intranet.kch.model.dto.excel.InVoiceDto;
 import com.intranet.kch.model.entity.BCExcelEntity;
 import com.intranet.kch.model.entity.IVExcelEntity;
@@ -9,8 +10,6 @@ import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.model.vo.IVExcelVo;
 import com.intranet.kch.repository.BCExcelRepository;
 import com.intranet.kch.repository.IVExcelRepository;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -113,82 +112,44 @@ public class BCExcelService {
         return ivExcelRepository.saveAll(list).stream().map(InVoiceDto::fromEntity).toList();
     }
 
-    public byte[] generateBCExcel(BookingConfirmationDto dto) {
-        try (InputStream templateStream = new ClassPathResource("templates/excelFile/BookingConfirmation.xlsx").getInputStream();
-             Workbook workbook = new XSSFWorkbook(templateStream);
-             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-
-            // 템플릿의 첫 번째 시트를 가져오기
-            Sheet sheet = workbook.getSheetAt(0);
-
-            // 특정 셀에 값 설정
-            createSheetForBookingConfirmation(sheet, dto);
-
-            workbook.write(out);
-            return out.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to generate Excel file from template", e);
-        }
-    }
-
-    public byte[] generateIVExcel(InVoiceDto dto) {
-        try (InputStream templateStream = new ClassPathResource("templates/excelFile/InVoice.xlsx").getInputStream();
-             Workbook workbook = new XSSFWorkbook(templateStream);
-             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-
-            // 템플릿의 첫 번째 시트를 가져오기
-            Sheet sheet = workbook.getSheetAt(0);
-
-            // 특정 셀에 값 설정
-            createSheetForBookingConfirmation(sheet, dto);
-
-            workbook.write(out);
-            return out.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to generate Excel file from template", e);
-        }
-    }
-
-    private void createSheetForBookingConfirmation(Sheet sheet, BookingConfirmationDto dto) {
-        createCell(sheet, 14, 3, dto.getPropertyName());
-        createCell(sheet, 17, 3, dto.getGuestName());
-        createCell(sheet, 18, 3, dto.getCheckIn());
-        createCell(sheet, 19, 3, dto.getCheckOut());
-        createCell(sheet, 20, 3, dto.getApartmentType());
-        createCell(sheet, 20, 3, dto.getApartmentType());
-        createCell(sheet, 21, 3, dto.getApartmentAddress());
-        createCell(sheet, 22, 3, dto.getKoreanAddress());
-        createCell(sheet, 23, 3, dto.getTotalRent());
-        createCell(sheet, 24, 3,  "(USD" + dto.getPrice() + " X " + dto.getTotalNights() + "night)");
-        createCell(sheet, 26, 3,  dto.getOfGuests());
-        createCell(sheet, 27, 3,  dto.getBookedBy());
-        createCell(sheet, 28, 3,  dto.getBookingRequestCompany());
-        createCell(sheet, 32, 3,  dto.getExtensionOfLease());
-        createCell(sheet, 33, 3,  dto.getNotice());
-        createCell(sheet, 48, 3,  dto.getPropertyName());
-        createCell(sheet, 56, 3,  "Signing Date: " + dto.getSignedDate());
-    }
-
-    private void createSheetForBookingConfirmation(Sheet sheet, InVoiceDto dto) {
-        createCell(sheet, 4, 3, dto.getInvoiceDate());
-        createCell(sheet, 6, 3, dto.getName());
-        createCell(sheet, 9, 7, dto.getCompanyName());
-        createCell(sheet, 10, 7, dto.getCompanyAddr());
-        createCell(sheet, 14, 1, dto.getService());
-        createCell(sheet, 14, 4, dto.getStartDate());
-        createCell(sheet, 14, 6, dto.getEndDate());
-        createCell(sheet, 14, 8, dto.getNights());
-        createCell(sheet, 14, 9, String.format("%,.2f", Double.parseDouble(dto.getTotalPrice())));
-        createCell(sheet, 25, 9, String.format("%,.2f", Double.parseDouble(dto.getTotalPrice())));
-        createCell(sheet, 35, 1, dto.getRemarks01());
-        createCell(sheet, 36, 1, dto.getRemarks02());
-    }
-
-    private void createCell(Sheet sheet, int r, int c, String value) {
-        Row row = sheet.getRow(r); // 행
-        Cell cell = row.getCell(c);
-        cell.setCellValue(value);
-    }
+//    public byte[] generateBCExcel(BookingConfirmationDto dto) {
+//        try (InputStream templateStream = new ClassPathResource("templates/excelFile/BookingConfirmation.xlsx").getInputStream();
+//             Workbook workbook = new XSSFWorkbook(templateStream);
+//             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+//
+//            // 템플릿의 첫 번째 시트를 가져오기
+//            Sheet sheet = workbook.getSheetAt(0);
+//
+//            // 특정 셀에 값 설정
+//            dto.setSheet(sheet);
+//
+//            workbook.write(out);
+//            return out.toByteArray();
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to generate Excel file from template", e);
+//        }
+//    }
+//
+//    public byte[] generateIVExcel(InVoiceDto dto) {
+//        try (InputStream templateStream = new ClassPathResource("templates/excelFile/InVoice.xlsx").getInputStream();
+//             Workbook workbook = new XSSFWorkbook(templateStream);
+//             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+//
+//            // 템플릿의 첫 번째 시트를 가져오기
+//            Sheet sheet = workbook.getSheetAt(0);
+//
+//            // 특정 셀에 값 설정
+//            dto.setSheet(sheet);
+//
+//            // 미리 계산식 적용
+//            workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
+//
+//            workbook.write(out);
+//            return out.toByteArray();
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to generate Excel file from template", e);
+//        }
+//    }
 
     public List<BCExcelVo> getAll() {
         return bcExcelRepository.findAllByDeletedAtIsNull().stream()
@@ -223,5 +184,26 @@ public class BCExcelService {
     private void deleteInVoiceListByBCId(Long bcId) {
         ivExcelRepository.findByBcIdAndDeletedAtIsNull(bcId)
                 .forEach(iv -> iv.setDeletedAt(LocalDateTime.now()));
+    }
+
+    public byte[] generateExcel(ExcelDto dto, String templateName, boolean hasFunction) {
+        try (InputStream templateStream = new ClassPathResource("templates/excelFile/" + templateName + ".xlsx").getInputStream();
+             Workbook workbook = new XSSFWorkbook(templateStream);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+            // 템플릿의 첫 번째 시트를 가져오기
+            Sheet sheet = workbook.getSheetAt(0);
+
+            // 특정 셀에 값 설정
+            dto.setSheet(sheet);
+
+            // 미리 계산식 적용
+            if (hasFunction) workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
+
+            workbook.write(out);
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to generate Excel file from template", e);
+        }
     }
 }

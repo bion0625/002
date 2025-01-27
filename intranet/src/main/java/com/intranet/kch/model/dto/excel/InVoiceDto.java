@@ -2,13 +2,14 @@ package com.intranet.kch.model.dto.excel;
 
 import com.intranet.kch.model.entity.IVExcelEntity;
 import com.intranet.kch.util.DateFormatUtil;
+import com.intranet.kch.util.ExcelPoiUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.poi.ss.usermodel.Sheet;
 
 @Data
 @AllArgsConstructor
-public class InVoiceDto {
-
+public class InVoiceDto implements ExcelDto {
     private String service;
     private String remarks01;
     private String remarks02;
@@ -41,5 +42,21 @@ public class InVoiceDto {
                 DateFormatUtil.localDateToString(entity.getEndDate().toLocalDate(), "MMMM dd, yyyy"),
                 entity.getTotalPrice().toString()
         );
+    }
+
+    @Override
+    public void setSheet(Sheet sheet) {
+        ExcelPoiUtil excelPoiUtil = new ExcelPoiUtil(sheet);
+        excelPoiUtil.setCellStringValue(4, 3, this.getInvoiceDate());
+        excelPoiUtil.setCellStringValue(6, 3, this.getName());
+        excelPoiUtil.setCellStringValue(9, 7, this.getCompanyName());
+        excelPoiUtil.setCellStringValue(10, 7, this.getCompanyAddr());
+        excelPoiUtil.setCellStringValue(14, 1, this.getService());
+        excelPoiUtil.setCellStringValue(14, 4, this.getStartDate());
+        excelPoiUtil.setCellStringValue(14, 6, this.getEndDate());
+        excelPoiUtil.setCellStringValue(14, 8, this.getNights());
+        excelPoiUtil.setCellDoubleValue(14, 9, Double.parseDouble(this.getTotalPrice()));
+        excelPoiUtil.setCellStringValue(35, 1, this.getRemarks01());
+        excelPoiUtil.setCellStringValue(36, 1, this.getRemarks02());
     }
 }

@@ -57,11 +57,11 @@ public class BCExcelController {
              ZipOutputStream zos = new ZipOutputStream(zipOutputStream)) {
 
             // 엑셀 파일 생성 및 추가
-            byte[] bcExcelData = bcExcelService.generateBCExcel(bookingConfirmationDto);
+            byte[] bcExcelData = bcExcelService.generateExcel(bookingConfirmationDto, "BookingConfirmation", false);
             addFileToZip(bcExcelVo.getTitle() + "_booking_confirmation.xlsx", bcExcelData, zos);
 
             for (InVoiceDto inVoiceDto : bookingConfirmationDto.getInVoiceDtos()) {
-                byte[] ivExcelData = bcExcelService.generateIVExcel(inVoiceDto);
+                byte[] ivExcelData = bcExcelService.generateExcel(inVoiceDto, "InVoice", true);
                 addFileToZip(inVoiceDto.getName() + ".xlsx", ivExcelData, zos);
             }
 
@@ -78,7 +78,6 @@ public class BCExcelController {
             status.setComplete();
         }
     }
-    // TODO
     private void addFileToZip(String fileName, byte[] fileData, ZipOutputStream zos) throws IOException {
         ZipEntry zipEntry = new ZipEntry(fileName);
         zos.putNextEntry(zipEntry);
