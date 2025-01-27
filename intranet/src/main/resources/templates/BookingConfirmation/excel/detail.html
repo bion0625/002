@@ -105,6 +105,16 @@
     const title = document.querySelector("#title");
     const titleInit = document.querySelector("#title-init");
     const titleTail = document.querySelector("#title-tail");
+    const checkIn = document.querySelector("#checkIn");
+    const checkOut = document.querySelector("#checkOut");
+    const totalNights = document.querySelector("#totalNights");
+
+    checkIn.addEventListener("change", () => {
+        if (!isNaN(getCheckDaies())) totalNights.value = getCheckDaies();
+    })
+    checkOut.addEventListener("change", () => {
+        if (!isNaN(getCheckDaies())) totalNights.value = getCheckDaies();
+    })
 
     // 회사명 자동 입력
     const company = document.querySelector("#company");
@@ -151,18 +161,18 @@
         document.querySelector("#ivExcels").innerHTML='<label>IV Excels</label>';
     })
 
+    getCheckDaies = () => {
+        const startDate = new Date(checkIn.value.split('T')[0]); // 시간 제거
+        const endDate = new Date(checkOut.value.split('T')[0]); // 시간 제거
+        return (endDate - startDate) / (1000 * 60 * 60 * 24);
+    }
+
     // submit시 날짜 정합성 확인
     function validateSumNights() {
-        const totalNights = Number(document.querySelector("#totalNights").value);
+        const totalNightsValue = Number(totalNights.value);
 
         // checkin - checkout 기간 과 totalNights 비교
-        const checkIn = document.getElementById("checkIn").value;
-        const checkOut = document.getElementById("checkOut").value;
-        const startDate = new Date(checkIn.split('T')[0]); // 시간 제거
-        const endDate = new Date(checkOut.split('T')[0]); // 시간 제거
-        const differenceInTime = endDate - startDate;
-        const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24);
-        if (totalNights !== differenceInDays) {
+        if (totalNightsValue !== getCheckDaies()) {
             alert("totalNights 와 checkIn - checkOut 기간이 맞지 않습니다.")
             return false;
         }
@@ -173,7 +183,7 @@
             const value = parseFloat(input.value); // 숫자로 변환
             return total + (isNaN(value) ? 0 : value); // 유효한 숫자만 누적
         }, 0);
-        if (totalNights !== sum) {
+        if (totalNightsValue !== sum) {
             alert("totalNights 와 invoice의 합계가 맞지 않습니다.");
             return false;
         }
