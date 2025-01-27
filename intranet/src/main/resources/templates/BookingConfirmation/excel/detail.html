@@ -154,17 +154,30 @@
     // submit시 날짜 정합성 확인
     function validateSumNights() {
         const totalNights = Number(document.querySelector("#totalNights").value);
-        const inputs = Array.from(document.querySelectorAll('input[name^="ivExcelVos"][name$=".nights"]'));
 
+        // checkin - checkout 기간 과 totalNights 비교
+        const checkIn = document.getElementById("checkIn").value;
+        const checkOut = document.getElementById("checkOut").value;
+        const startDate = new Date(checkIn.split('T')[0]); // 시간 제거
+        const endDate = new Date(checkOut.split('T')[0]); // 시간 제거
+        const differenceInTime = endDate - startDate;
+        const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24);
+        if (totalNights !== differenceInDays) {
+            alert("totalNights 와 checkIn - checkOut 기간이 맞지 않습니다.")
+            return false;
+        }
+
+        // 인보이스의 nights 합계와 totalNights 비교
+        const inputs = Array.from(document.querySelectorAll('input[name^="ivExcelVos"][name$=".nights"]'));
         const sum = inputs.reduce((total, input) => {
             const value = parseFloat(input.value); // 숫자로 변환
             return total + (isNaN(value) ? 0 : value); // 유효한 숫자만 누적
         }, 0);
-
         if (totalNights !== sum) {
             alert("totalNights 와 invoice의 합계가 맞지 않습니다.");
             return false;
         }
+
         return true;
     }
 </script>
