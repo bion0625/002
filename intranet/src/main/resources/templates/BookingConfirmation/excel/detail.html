@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>INTRANET:Booking Confirmation</title>
     <link rel="stylesheet" th:href="@{/css/intranet.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/decimal.js"></script>
 </head>
 <body>
 <nav>HOME > Booking Confirmation > EXCEL > DETAIL</nav>
@@ -21,70 +22,109 @@
         </select>
     </div>
     <form th:action="@{/BookingConfirmation/excel/insert}" th:method="post" th:object="${excel}" onsubmit="return validateSumNights()">
-        <label for="title">고유값</label>
-        <div id="titleBox">
-            <input id="title-init" type="text" readonly>
-            +
-            <input id="title-tail" type="text">
-        </div>
-        <input id="title" th:field="*{title}" type="hidden" required>
-
-        <label for="propertyName">propertyName</label>
-        <input id="propertyName" th:field="*{propertyName}" type="text" required>
-
-        <label for="guestName">guestName</label>
-        <input id="guestName" th:field="*{guestName}" type="text" required>
-
-        <label for="checkIn">checkIn</label>
-        <input id="checkIn" th:field="*{checkIn}" type="datetime-local" required>
-
-        <label for="checkOut">checkOut</label>
-        <input id="checkOut" th:field="*{checkOut}" type="datetime-local" required>
-
-        <label for="apartmentType">apartmentType</label>
-        <input id="apartmentType" th:field="*{apartmentType}" type="text" required>
-
-        <label for="apartmentAddress">apartmentAddress</label>
-        <input id="apartmentAddress" th:field="*{apartmentAddress}" type="text" required>
-
-        <label for="koreanAddress">koreanAddress</label>
-        <input id="koreanAddress" th:field="*{koreanAddress}" type="text" required>
-
-        <label for="price">price</label>
-        <input id="price" step="0.01" th:field="*{price}" type="number" required>
-
-        <label for="totalNights">totalNights</label>
-        <input id="totalNights" th:field="*{totalNights}" type="number" readonly required>
-
-        <label for="totalRent">totalRent</label>
-        <input id="totalRent" th:field="*{totalRent}" type="text" readonly required>
-
-        <label for="ofGuests">ofGuests</label>
-        <input id="ofGuests" th:field="*{ofGuests}" type="text" required>
-
-        <label for="bookedBy">bookedBy</label>
-        <input id="bookedBy" th:field="*{bookedBy}" type="text" readonly required>
-
-        <label for="bookingRequestCompany">bookingRequestCompany</label>
-        <input id="bookingRequestCompany" th:field="*{bookingRequestCompany}" type="text" required>
-
-        <label for="extensionOfLease">extensionOfLease</label>
-        <input id="extensionOfLease" th:field="*{extensionOfLease}" type="text" required>
-
-        <label for="notice">notice</label>
-        <textarea rows="5" id="notice" th:field="*{notice}" type="text" required></textarea>
-
-        <label for="signedDate">signedDate</label>
-        <input id="signedDate" th:field="*{signedDate}" type="date" required>
-
-        <label for="service">service</label>
-        <input id="service" th:field="*{service}" type="text" required>
-
-        <label for="remarks01">remarks01</label>
-        <input id="remarks01" th:field="*{remarks01}" type="text" required>
-
-        <label for="remarks02">remarks02</label>
-        <input id="remarks02" th:field="*{remarks02}" type="text" required>
+        <table>
+            <tbody>
+            <tr>
+                <td colspan="2">
+                    <label for="title">고유값</label>
+                    <div id="titleBox">
+                        <input id="title-init" type="text" readonly>
+                        +
+                        <input id="title-tail" type="text">
+                    </div>
+                    <input id="title" th:field="*{title}" type="hidden" required>
+                </td>
+                <td colspan="2">
+                    <label for="propertyName">propertyName</label>
+                    <input id="propertyName" th:field="*{propertyName}" type="text" required>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 25%">
+                    <label for="checkIn">checkIn</label>
+                    <input id="checkIn" th:field="*{checkIn}" type="datetime-local" required>
+                </td>
+                <td style="width: 25%">
+                    <label for="checkOut">checkOut</label>
+                    <input id="checkOut" th:field="*{checkOut}" type="datetime-local" required>
+                </td>
+                <td style="width: 25%">
+                    <label for="guestName">guestName</label>
+                    <input id="guestName" th:field="*{guestName}" type="text" required>
+                </td>
+                <td style="width: 25%">
+                    <label for="apartmentType">apartmentType</label>
+                    <input id="apartmentType" th:field="*{apartmentType}" type="text" required>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label for="apartmentAddress">apartmentAddress</label>
+                    <input id="apartmentAddress" th:field="*{apartmentAddress}" type="text" required>
+                </td>
+                <td colspan="2">
+                    <label for="koreanAddress">koreanAddress</label>
+                    <input id="koreanAddress" th:field="*{koreanAddress}" type="text" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="totalNights">totalNights</label>
+                    <input id="totalNights" th:field="*{totalNights}" type="number" readonly required>
+                </td>
+                <td colspan="2">
+                    <label for="price">price</label>
+                    <input id="price" step="0.01" th:field="*{price}" type="number" required>
+                </td>
+                <td>
+                    <label for="totalRent">totalRent</label>
+                    <input id="totalRent" step="0.01" th:field="*{totalRent}" type="number" readonly required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="ofGuests">ofGuests</label>
+                    <input id="ofGuests" th:field="*{ofGuests}" type="text" required>
+                </td>
+                <td>
+                    <label for="bookedBy">bookedBy</label>
+                    <input id="bookedBy" th:field="*{bookedBy}" type="text" readonly required>
+                </td>
+                <td>
+                    <label for="bookingRequestCompany">bookingRequestCompany</label>
+                    <input id="bookingRequestCompany" th:field="*{bookingRequestCompany}" type="text" required>
+                </td>
+                <td>
+                    <label for="extensionOfLease">extensionOfLease</label>
+                    <input id="extensionOfLease" th:field="*{extensionOfLease}" type="text" required>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <label for="notice">notice</label>
+                    <textarea rows="5" id="notice" th:field="*{notice}" type="text" required></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="signedDate">signedDate</label>
+                    <input id="signedDate" th:field="*{signedDate}" type="date" required>
+                </td>
+                <td>
+                    <label for="service">service</label>
+                    <input id="service" th:field="*{service}" type="text" required>
+                </td>
+                <td>
+                    <label for="remarks01">remarks01</label>
+                    <input id="remarks01" th:field="*{remarks01}" type="text" required>
+                </td>
+                <td>
+                    <label for="remarks02">remarks02</label>
+                    <input id="remarks02" th:field="*{remarks02}" type="text" required>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
         <input id="companyId" th:field="*{companyId}" type="hidden">
 
@@ -119,11 +159,15 @@
     })
 
     price.addEventListener("change", () => {
-        totalRent.value = totalNights.value * price.value;
+        totalRent.value = getTotalRent();
     })
     totalNights.addEventListener("change", () => {
-        totalRent.value = totalNights.value * price.value;
+        totalRent.value = getTotalRent();
     })
+
+    const getTotalRent = () => {
+        return new Decimal(price.value).times(totalNights.value).toFixed(2);
+    }
 
     // 회사명 자동 입력
     const company = document.querySelector("#company");
