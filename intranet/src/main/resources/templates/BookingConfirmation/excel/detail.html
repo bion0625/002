@@ -50,14 +50,14 @@
         <label for="koreanAddress">koreanAddress</label>
         <input id="koreanAddress" th:field="*{koreanAddress}" type="text" required>
 
-        <label for="totalRent">totalRent</label>
-        <input id="totalRent" th:field="*{totalRent}" type="text" required>
-
         <label for="price">price</label>
-        <input id="price" th:field="*{price}" type="number" required>
+        <input id="price" step="0.01" th:field="*{price}" type="number" required>
 
         <label for="totalNights">totalNights</label>
-        <input id="totalNights" th:field="*{totalNights}" type="number" required>
+        <input id="totalNights" th:field="*{totalNights}" type="number" readonly required>
+
+        <label for="totalRent">totalRent</label>
+        <input id="totalRent" th:field="*{totalRent}" type="text" readonly required>
 
         <label for="ofGuests">ofGuests</label>
         <input id="ofGuests" th:field="*{ofGuests}" type="text" required>
@@ -108,12 +108,21 @@
     const checkIn = document.querySelector("#checkIn");
     const checkOut = document.querySelector("#checkOut");
     const totalNights = document.querySelector("#totalNights");
+    const price = document.querySelector("#price");
+    const totalRent = document.querySelector("#totalRent");
 
     checkIn.addEventListener("change", () => {
         if (!isNaN(getCheckDaies())) totalNights.value = getCheckDaies();
     })
     checkOut.addEventListener("change", () => {
         if (!isNaN(getCheckDaies())) totalNights.value = getCheckDaies();
+    })
+
+    price.addEventListener("change", () => {
+        totalRent.value = totalNights.value * price.value;
+    })
+    totalNights.addEventListener("change", () => {
+        totalRent.value = totalNights.value * price.value;
     })
 
     // 회사명 자동 입력

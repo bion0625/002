@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.Sheet;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class BookingConfirmationDto implements ExcelDto {
     private String apartmentType;
     private String apartmentAddress;
     private String koreanAddress;
-    private String totalRent;
+    private Double totalRent;
     private Double price;
     private Long totalNights;
     private String ofGuests;
@@ -65,8 +66,8 @@ public class BookingConfirmationDto implements ExcelDto {
         excelPoiUtil.setCellStringValue(20, 3, this.getApartmentType());
         excelPoiUtil.setCellStringValue(21, 3, this.getApartmentAddress());
         excelPoiUtil.setCellStringValue(22, 3, this.getKoreanAddress());
-        excelPoiUtil.setCellStringValue(23, 3, this.getTotalRent());
-        excelPoiUtil.setCellStringValue(24, 3,  "(USD" + this.getPrice() + " X " + this.getTotalNights() + "night)");
+        excelPoiUtil.setCellStringValue(23, 3, "USD " + new DecimalFormat("#,###.00").format(this.totalRent) + " including tax for given term");
+        excelPoiUtil.setCellStringValue(24, 3,  "(USD" + new DecimalFormat("#,###.00").format(this.price) + " x " + this.getTotalNights() + "night)");
         excelPoiUtil.setCellStringValue(26, 3,  this.getOfGuests());
         excelPoiUtil.setCellStringValue(27, 3,  this.getBookedBy());
         excelPoiUtil.setCellStringValue(28, 3,  this.getBookingRequestCompany());

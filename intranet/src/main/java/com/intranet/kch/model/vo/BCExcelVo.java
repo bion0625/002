@@ -28,7 +28,7 @@ public class BCExcelVo {
     private String apartmentType;
     private String apartmentAddress;
     private String koreanAddress;
-    private String totalRent;
+    private Double totalRent;
     private Double price;
     private Long totalNights;
     private String ofGuests;
