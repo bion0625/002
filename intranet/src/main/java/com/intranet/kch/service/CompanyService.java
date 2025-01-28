@@ -31,7 +31,7 @@ public class CompanyService {
     }
 
     public List<CompanyVo> getAll() {
-        return companyRepository.findAllByDeletedAtIsNull().stream()
+        return companyRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc().stream()
                 .map(CompanyVo::fromEntity)
                 .toList();
     }

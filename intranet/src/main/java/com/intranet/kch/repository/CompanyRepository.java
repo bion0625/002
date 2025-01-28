@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CompanyRepository extends JpaRepository<CompanyEntity, Long> {
-    List<CompanyEntity> findAllByDeletedAtIsNull();
+    List<CompanyEntity> findAllByDeletedAtIsNullOrderByCreatedAtDesc();
     Optional<CompanyEntity> findByCompanyTitleAndDeletedAtIsNull(String companyTitle);
 }

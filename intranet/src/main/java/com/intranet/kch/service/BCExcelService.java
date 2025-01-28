@@ -152,7 +152,7 @@ public class BCExcelService {
 //    }
 
     public List<BCExcelVo> getAll() {
-        return bcExcelRepository.findAllByDeletedAtIsNull().stream()
+        return bcExcelRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc().stream()
                 .map(BCExcelVo::fromEntity)
                 .toList();
     }
