@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CompanyRepository extends JpaRepository<CompanyEntity, Long> {
-    List<CompanyEntity> findAllByDeletedAtIsNullOrderByCreatedAtDesc();
+    List<CompanyEntity> findAllByDeletedAtIsNullOrderByCompanyTitle();
     Page<CompanyEntity> findAllByDeletedAtIsNullOrderByCreatedAtDesc(Pageable pageable);
     Optional<CompanyEntity> findByCompanyTitleAndDeletedAtIsNull(String companyTitle);
     Optional<CompanyEntity> findByCompanyInvoiceAcronymAndDeletedAtIsNull(String invoiceAcronym);

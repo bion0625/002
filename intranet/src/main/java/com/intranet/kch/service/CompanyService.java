@@ -19,19 +19,6 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
 
-//    @Transactional
-//    public void saveOrUpdate(CompanyVo vo) {
-//        companyRepository.findByCompanyTitleAndDeletedAtIsNull(vo.getCompanyTitle())
-//                .ifPresentOrElse(
-//                        entity -> {
-//                            entity.setCompanyName(vo.getCompanyName());
-//                            entity.setCompanyAddr(vo.getCompanyAddr());
-//                            entity.setCompanyInvoiceAcronym(vo.getCompanyInvoiceAcronym());
-//                            entity.setUpdatedAt(LocalDateTime.now());
-//                            },
-//                        () -> companyRepository.save(vo.toEntity()));
-//    }
-
     @Transactional
     public void save(CompanyVo vo) {
         companyRepository.save(vo.toEntity());
@@ -58,7 +45,7 @@ public class CompanyService {
     }
 
     public List<CompanyVo> getAll() {
-        return companyRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc().stream()
+        return companyRepository.findAllByDeletedAtIsNullOrderByCompanyTitle().stream()
                 .map(CompanyVo::fromEntity)
                 .toList();
     }
