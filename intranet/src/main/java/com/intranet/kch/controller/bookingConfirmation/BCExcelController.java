@@ -10,7 +10,9 @@ import com.intranet.kch.util.ExcelPoiUtil;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -43,12 +46,19 @@ public class BCExcelController {
     @GetMapping
     public String excel(@RequestParam(defaultValue = "0") int page,
                         @RequestParam(defaultValue = "10") int size,
+                        @RequestParam(required = false) String keyword,
                         Model model) {
-        model.addAttribute("items", bcExcelService.getAll(
-                PageRequest.of(
-                        page,
-                        size,
-                        Sort.by("createdAt").descending())));
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<BCExcelVo> items = Optional.ofNullable(keyword)
+                .filter(k -> !k.trim().isEmpty())
+                .map(k -> {
+                    model.addAttribute("keyword", k);
+                    return bcExcelService.search(k, pageable);
+                })
+                .orElseGet(() -> bcExcelService.getAll(pageable));
+        model.addAttribute("items", items);
         return "BookingConfirmation/excel/list";
     }
     @GetMapping("/insert")

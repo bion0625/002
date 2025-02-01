@@ -111,6 +111,11 @@ public class BCExcelService {
                 .map(BCExcelVo::fromEntity);
     }
 
+    public Page<BCExcelVo> search(String keyword, Pageable pageable) {
+        return bcExcelRepository.searchByKeyword(keyword, pageable)
+                .map(BCExcelVo::fromEntity);
+    }
+
     public BCExcelVo getById(Long id) {
         return bcExcelRepository.findById(id)
                 .filter(entity -> entity.getDeletedAt() == null)
