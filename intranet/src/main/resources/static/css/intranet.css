@@ -367,3 +367,30 @@ p strong {
     font-size: 20px; /* 크기 키움 */
     font-weight: 700; /* 더 굵게 */
 }
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 5px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.pagination a:hover {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+}
+
+.pagination span {
+    font-size: 16px;
+    font-weight: bold;
+}

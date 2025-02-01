@@ -3,6 +3,8 @@ package com.intranet.kch.controller.bookingConfirmation;
 import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.service.CompanyService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +26,14 @@ public class CompanyController {
         model.addAttribute("company", new CompanyVo());
     }
     @GetMapping
-    public String company(Model model) {
-        model.addAttribute("items", companyService.getAll());
+    public String company(@RequestParam(defaultValue = "0") int page,
+                          @RequestParam(defaultValue = "10") int size,
+                          Model model) {
+        model.addAttribute("items", companyService.getAll(
+                PageRequest.of(
+                        page,
+                        size,
+                        Sort.by("createdAt").descending())));
         return "BookingConfirmation/company/list";
     }
     @GetMapping("/insert")

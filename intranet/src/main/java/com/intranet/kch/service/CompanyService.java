@@ -2,6 +2,8 @@ package com.intranet.kch.service;
 
 import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.repository.CompanyRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +36,11 @@ public class CompanyService {
         return companyRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc().stream()
                 .map(CompanyVo::fromEntity)
                 .toList();
+    }
+
+    public Page<CompanyVo> getAll(Pageable pageable) {
+        return companyRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc(pageable)
+                .map(CompanyVo::fromEntity);
     }
 
     public CompanyVo getById(Long id) {
