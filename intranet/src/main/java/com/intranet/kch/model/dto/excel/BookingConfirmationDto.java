@@ -58,22 +58,22 @@ public class BookingConfirmationDto implements ExcelDto {
     @Override
     public void setSheet(Sheet sheet) {
         ExcelPoiUtil excelPoiUtil = new ExcelPoiUtil(sheet);
-        excelPoiUtil.setCellStringValue(14, 3, this.getPropertyName());
-        excelPoiUtil.setCellStringValue(17, 3, this.getGuestName());
-        excelPoiUtil.setCellStringValue(18, 3, this.getCheckIn());
-        excelPoiUtil.setCellStringValue(19, 3, this.getCheckOut());
-        excelPoiUtil.setCellStringValue(20, 3, this.getApartmentType());
-        excelPoiUtil.setCellStringValue(20, 3, this.getApartmentType());
-        excelPoiUtil.setCellStringValue(21, 3, this.getApartmentAddress());
-        excelPoiUtil.setCellStringValue(22, 3, this.getKoreanAddress());
+        excelPoiUtil.setCellStringValue(14, 3, this.propertyName);
+        excelPoiUtil.setCellStringValue(17, 3, this.guestName);
+        excelPoiUtil.setCellStringValue(18, 3, this.checkIn);
+        excelPoiUtil.setCellStringValue(19, 3, this.checkOut);
+        excelPoiUtil.setCellStringValue(20, 3, this.apartmentType);
+        excelPoiUtil.setCellStringValue(20, 3, this.apartmentType);
+        excelPoiUtil.setCellStringValue(21, 3, this.apartmentAddress);
+        excelPoiUtil.setCellStringValue(22, 3, this.koreanAddress);
         excelPoiUtil.setCellStringValue(23, 3, "USD " + new DecimalFormat("#,###.00").format(this.totalRent) + " including tax for given term");
-        excelPoiUtil.setCellStringValue(24, 3,  "(USD" + new DecimalFormat("#,###.00").format(this.price) + " x " + this.getTotalNights() + "night)");
-        excelPoiUtil.setCellStringValue(26, 3,  this.getOfGuests());
-        excelPoiUtil.setCellStringValue(27, 3,  this.getBookedBy());
-        excelPoiUtil.setCellStringValue(28, 3,  this.getBookingRequestCompany());
-        excelPoiUtil.setCellStringValue(32, 3,  this.getExtensionOfLease());
+        excelPoiUtil.setCellStringValue(24, 3,  "(USD" + new DecimalFormat("#,###.00").format(this.price) + " x " + this.totalNights + "night)");
+        excelPoiUtil.setCellStringValue(26, 3,  this.ofGuests);
+        excelPoiUtil.setCellStringValue(27, 3,  this.bookedBy);
+        excelPoiUtil.setCellStringValue(28, 3,  this.bookingRequestCompany);
+        excelPoiUtil.setCellStringValue(32, 3,  this.extensionOfLease);
 
-        String[] notices = this.getNotice().split("\n");
+        String[] notices = this.notice.split("\n");
         int[] lines = {33, 35, 37, 38, 39, 40, 41};
         for (int i = 0; i < Math.min(notices.length, 7); i++) {
             if (i == 6) {
@@ -86,7 +86,7 @@ public class BookingConfirmationDto implements ExcelDto {
             } else excelPoiUtil.setCellStringValue(lines[i], 3,  notices[i]);
         }
 
-        excelPoiUtil.setCellStringValue(48, 3,  this.getPropertyName());
-        excelPoiUtil.setCellStringValue(56, 3,  "Signing Date: " + this.getSignedDate());
+        excelPoiUtil.setCellStringValue(48, 3,  this.propertyName);
+        excelPoiUtil.setCellStringValue(56, 3,  "Signing Date: " + this.signedDate);
     }
 }

@@ -6,6 +6,7 @@ import com.intranet.kch.model.vo.BCExcelVo;
 import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.service.BCExcelService;
 import com.intranet.kch.service.CompanyService;
+import com.intranet.kch.util.ExcelPoiUtil;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -57,11 +58,11 @@ public class BCExcelController {
              ZipOutputStream zos = new ZipOutputStream(zipOutputStream)) {
 
             // 엑셀 파일 생성 및 추가
-            byte[] bcExcelData = bcExcelService.generateExcel(bookingConfirmationDto, "BookingConfirmation", false);
+            byte[] bcExcelData = ExcelPoiUtil.generateExcel(bookingConfirmationDto, "BookingConfirmation", false);
             addFileToZip(bcExcelVo.getTitle() + "_booking_confirmation.xlsx", bcExcelData, zos);
 
             for (InVoiceDto inVoiceDto : bookingConfirmationDto.getInVoiceDtos()) {
-                byte[] ivExcelData = bcExcelService.generateExcel(inVoiceDto, "InVoice", true);
+                byte[] ivExcelData = ExcelPoiUtil.generateExcel(inVoiceDto, "InVoice", true);
                 addFileToZip(inVoiceDto.getName() + ".xlsx", ivExcelData, zos);
             }
 

@@ -47,16 +47,16 @@ public class InVoiceDto implements ExcelDto {
     @Override
     public void setSheet(Sheet sheet) {
         ExcelPoiUtil excelPoiUtil = new ExcelPoiUtil(sheet);
-        excelPoiUtil.setCellStringValue(4, 3, this.getInvoiceDate());
-        excelPoiUtil.setCellStringValue(6, 3, this.getName());
-        excelPoiUtil.setCellStringValue(9, 7, this.getCompanyName());
-        excelPoiUtil.setCellStringValue(10, 7, this.getCompanyAddr());
-        excelPoiUtil.setCellStringValue(14, 1, this.getService());
-        excelPoiUtil.setCellStringValue(14, 4, this.getStartDate());
-        excelPoiUtil.setCellStringValue(14, 6, this.getEndDate());
-        excelPoiUtil.setCellStringValue(14, 8, this.getNights());
-        excelPoiUtil.setCellDoubleValue(14, 9, Double.parseDouble(this.getTotalPrice()));
-        excelPoiUtil.setCellStringValue(35, 1, this.getRemarks01());
-        excelPoiUtil.setCellStringValue(36, 1, this.getRemarks02());
+        excelPoiUtil.setCellStringValue(4, 3, this.invoiceDate);
+        excelPoiUtil.setCellStringValue(6, 3, this.name);
+        excelPoiUtil.setCellStringValue(9, 7, this.companyName);
+        excelPoiUtil.setCellStringValue(10, 7, this.companyAddr);
+        excelPoiUtil.setCellStringValue(14, 1, this.service);
+        excelPoiUtil.setCellStringValue(14, 4, this.startDate);
+        excelPoiUtil.setCellStringValue(14, 6, this.endDate);
+        excelPoiUtil.setCellStringValue(14, 8, this.nights);
+        excelPoiUtil.setCellDoubleValue(14, 9, Double.parseDouble(this.totalPrice));
+        excelPoiUtil.setCellStringValue(35, 1, this.remarks01);
+        excelPoiUtil.setCellStringValue(36, 1, this.remarks02);
     }
 }

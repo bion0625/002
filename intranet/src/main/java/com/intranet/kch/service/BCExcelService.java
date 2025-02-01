@@ -1,7 +1,6 @@
 package com.intranet.kch.service;
 
 import com.intranet.kch.model.dto.excel.BookingConfirmationDto;
-import com.intranet.kch.model.dto.excel.ExcelDto;
 import com.intranet.kch.model.dto.excel.InVoiceDto;
 import com.intranet.kch.model.entity.BCExcelEntity;
 import com.intranet.kch.model.entity.IVExcelEntity;
@@ -10,16 +9,9 @@ import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.model.vo.IVExcelVo;
 import com.intranet.kch.repository.BCExcelRepository;
 import com.intranet.kch.repository.IVExcelRepository;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -112,45 +104,6 @@ public class BCExcelService {
         return ivExcelRepository.saveAll(list).stream().map(InVoiceDto::fromEntity).toList();
     }
 
-//    public byte[] generateBCExcel(BookingConfirmationDto dto) {
-//        try (InputStream templateStream = new ClassPathResource("templates/excelFile/BookingConfirmation.xlsx").getInputStream();
-//             Workbook workbook = new XSSFWorkbook(templateStream);
-//             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-//
-//            // 템플릿의 첫 번째 시트를 가져오기
-//            Sheet sheet = workbook.getSheetAt(0);
-//
-//            // 특정 셀에 값 설정
-//            dto.setSheet(sheet);
-//
-//            workbook.write(out);
-//            return out.toByteArray();
-//        } catch (IOException e) {
-//            throw new RuntimeException("Failed to generate Excel file from template", e);
-//        }
-//    }
-//
-//    public byte[] generateIVExcel(InVoiceDto dto) {
-//        try (InputStream templateStream = new ClassPathResource("templates/excelFile/InVoice.xlsx").getInputStream();
-//             Workbook workbook = new XSSFWorkbook(templateStream);
-//             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-//
-//            // 템플릿의 첫 번째 시트를 가져오기
-//            Sheet sheet = workbook.getSheetAt(0);
-//
-//            // 특정 셀에 값 설정
-//            dto.setSheet(sheet);
-//
-//            // 미리 계산식 적용
-//            workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
-//
-//            workbook.write(out);
-//            return out.toByteArray();
-//        } catch (IOException e) {
-//            throw new RuntimeException("Failed to generate Excel file from template", e);
-//        }
-//    }
-
     public List<BCExcelVo> getAll() {
         return bcExcelRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc().stream()
                 .map(BCExcelVo::fromEntity)
@@ -184,26 +137,5 @@ public class BCExcelService {
     private void deleteInVoiceListByBCId(Long bcId) {
         ivExcelRepository.findByBcIdAndDeletedAtIsNull(bcId)
                 .forEach(iv -> iv.setDeletedAt(LocalDateTime.now()));
-    }
-
-    public byte[] generateExcel(ExcelDto dto, String templateName, boolean hasFunction) {
-        try (InputStream templateStream = new ClassPathResource("templates/excelFile/" + templateName + ".xlsx").getInputStream();
-             Workbook workbook = new XSSFWorkbook(templateStream);
-             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-
-            // 템플릿의 첫 번째 시트를 가져오기
-            Sheet sheet = workbook.getSheetAt(0);
-
-            // 특정 셀에 값 설정
-            dto.setSheet(sheet);
-
-            // 미리 계산식 적용
-            if (hasFunction) workbook.getCreationHelper().createFormulaEvaluator().evaluateAll();
-
-            workbook.write(out);
-            return out.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to generate Excel file from template", e);
-        }
     }
 }
