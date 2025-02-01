@@ -14,9 +14,9 @@
     <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
 </div>
 <div>
-    <form th:action="@{/BookingConfirmation/company/update}" th:method="post" th:object="${company}">
+    <form th:action="@{/BookingConfirmation/company/insert}" th:method="post" th:object="${company}">
         <label for="companyTitle">제목</label>
-        <input id="companyTitle" th:field="*{companyTitle}" type="text" readonly>
+        <input id="companyTitle" th:field="*{companyTitle}" type="text">
         <span class="error" th:if="${#fields.hasErrors('companyTitle')}" th:errors="*{companyTitle}"></span>
 
         <label for="companyName">회사명</label>

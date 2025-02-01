@@ -368,6 +368,16 @@ p strong {
     font-weight: 700; /* 더 굵게 */
 }
 
+/* 에러 메시지 스타일 */
+.error {
+    display: block; /* 블록 요소로 변경 */
+    font-size: 12px; /* 작은 글자 크기 */
+    color: #d32f2f; /* 빨간색 텍스트 */
+    margin-top: -10px; /* 입력 필드와 간격 조정 */
+    margin-bottom: 10px; /* 아래 여백 */
+    font-weight: bold; /* 굵은 텍스트 */
+}
+
 .pagination {
     margin-top: 20px;
     text-align: center;

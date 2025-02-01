@@ -49,12 +49,41 @@ public class CompanyController {
     }
     @GetMapping("/insert")
     public String detail() {
-        return "BookingConfirmation/company/detail";
+        return "BookingConfirmation/company/insert";
     }
     @PostMapping("/insert")
-    public String saveOrUpdate(@Valid @ModelAttribute("company") CompanyVo companyVo, BindingResult result, SessionStatus status) {
+    public String save(@Valid @ModelAttribute("company") CompanyVo companyVo, BindingResult result, SessionStatus status) {
         if (result.hasErrors()) return "/BookingConfirmation/company/detail";
-        companyService.saveOrUpdate(companyVo);
+        if (companyService.existByTitle(companyVo.getCompanyTitle())) {
+            result.rejectValue(
+                    "companyTitle",
+                    "duplicate.companyForm.companyTitle",
+                    "이미 사용 중인 제목입니다.");
+            return "/BookingConfirmation/company/insert";
+        }
+
+        if (companyService.existByInvoiceAcronym(companyVo.getCompanyInvoiceAcronym())) {
+            result.rejectValue(
+                    "companyInvoiceAcronym",
+                    "duplicate.companyForm.companyInvoiceAcronym",
+                    "이미 사용 중인 약어입니다.");
+            return "/BookingConfirmation/company/insert";
+        }
+        companyService.save(companyVo);
+        status.setComplete();
+        return "redirect:/BookingConfirmation/company";
+    }
+    @PostMapping("/update")
+    public String Update(@Valid @ModelAttribute("company") CompanyVo companyVo, BindingResult result, SessionStatus status) {
+        if (result.hasErrors()) return "/BookingConfirmation/company/detail";
+        if (companyService.existByInvoiceAcronym(companyVo.getCompanyInvoiceAcronym())) {
+            result.rejectValue(
+                    "companyInvoiceAcronym",
+                    "duplicate.companyForm.companyInvoiceAcronym",
+                    "이미 사용 중인 약어입니다.");
+            return "/BookingConfirmation/company/detail";
+        }
+        companyService.update(companyVo);
         status.setComplete();
         return "redirect:/BookingConfirmation/company";
     }

@@ -14,6 +14,7 @@ public interface CompanyRepository extends JpaRepository<CompanyEntity, Long> {
     List<CompanyEntity> findAllByDeletedAtIsNullOrderByCreatedAtDesc();
     Page<CompanyEntity> findAllByDeletedAtIsNullOrderByCreatedAtDesc(Pageable pageable);
     Optional<CompanyEntity> findByCompanyTitleAndDeletedAtIsNull(String companyTitle);
+    Optional<CompanyEntity> findByCompanyInvoiceAcronymAndDeletedAtIsNull(String invoiceAcronym);
     @Query("SELECT c FROM CompanyEntity c WHERE (LOWER(c.companyTitle) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(c.companyName) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
             "AND c.deletedAt IS NULL")

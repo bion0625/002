@@ -19,17 +19,42 @@ public class CompanyService {
         this.companyRepository = companyRepository;
     }
 
+//    @Transactional
+//    public void saveOrUpdate(CompanyVo vo) {
+//        companyRepository.findByCompanyTitleAndDeletedAtIsNull(vo.getCompanyTitle())
+//                .ifPresentOrElse(
+//                        entity -> {
+//                            entity.setCompanyName(vo.getCompanyName());
+//                            entity.setCompanyAddr(vo.getCompanyAddr());
+//                            entity.setCompanyInvoiceAcronym(vo.getCompanyInvoiceAcronym());
+//                            entity.setUpdatedAt(LocalDateTime.now());
+//                            },
+//                        () -> companyRepository.save(vo.toEntity()));
+//    }
+
     @Transactional
-    public void saveOrUpdate(CompanyVo vo) {
+    public void save(CompanyVo vo) {
+        companyRepository.save(vo.toEntity());
+    }
+
+    @Transactional
+    public void update(CompanyVo vo) {
         companyRepository.findByCompanyTitleAndDeletedAtIsNull(vo.getCompanyTitle())
-                .ifPresentOrElse(
-                        entity -> {
-                            entity.setCompanyName(vo.getCompanyName());
-                            entity.setCompanyAddr(vo.getCompanyAddr());
-                            entity.setCompanyInvoiceAcronym(vo.getCompanyInvoiceAcronym());
-                            entity.setUpdatedAt(LocalDateTime.now());
-                            },
-                        () -> companyRepository.save(vo.toEntity()));
+                .map(entity -> {
+                    entity.setCompanyName(vo.getCompanyName());
+                    entity.setCompanyAddr(vo.getCompanyAddr());
+                    entity.setCompanyInvoiceAcronym(vo.getCompanyInvoiceAcronym());
+                    entity.setUpdatedAt(LocalDateTime.now());
+                    return true;
+                });
+    }
+
+    public boolean existByTitle(String title) {
+        return companyRepository.findByCompanyTitleAndDeletedAtIsNull(title).isPresent();
+    }
+
+    public boolean existByInvoiceAcronym(String invoiceAcronym) {
+        return companyRepository.findByCompanyInvoiceAcronymAndDeletedAtIsNull(invoiceAcronym).isPresent();
     }
 
     public List<CompanyVo> getAll() {
