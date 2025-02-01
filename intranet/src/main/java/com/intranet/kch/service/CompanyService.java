@@ -4,6 +4,7 @@ import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.repository.CompanyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,7 @@ public class CompanyService {
 
     @Transactional
     public void save(CompanyVo vo) {
-        companyRepository.save(vo.toEntity());
+        companyRepository.save(vo.toEntity(getLoginId()));
     }
 
     @Transactional
@@ -31,6 +32,7 @@ public class CompanyService {
                     entity.setCompanyName(vo.getCompanyName());
                     entity.setCompanyAddr(vo.getCompanyAddr());
                     entity.setCompanyInvoiceAcronym(vo.getCompanyInvoiceAcronym());
+                    entity.setUpdateUser(getLoginId());
                     entity.setUpdatedAt(LocalDateTime.now());
                     return true;
                 });
@@ -40,8 +42,8 @@ public class CompanyService {
         return companyRepository.findByCompanyTitleAndDeletedAtIsNull(title).isPresent();
     }
 
-    public boolean existByInvoiceAcronym(String invoiceAcronym) {
-        return companyRepository.findByCompanyInvoiceAcronymAndDeletedAtIsNull(invoiceAcronym).isPresent();
+    public boolean existByInvoiceAcronym(CompanyVo companyVo) {
+        return companyRepository.findByCompanyInvoiceAcronymAndDeletedAtIsNull(companyVo.getCompanyInvoiceAcronym()).filter(entity -> !entity.getCompanyTitle().equals(companyVo.getCompanyTitle())).isPresent();
     }
 
     public List<CompanyVo> getAll() {
@@ -71,7 +73,12 @@ public class CompanyService {
     public void deleteById(Long id) {
         companyRepository.findById(id).map(entity -> {
             entity.setDeletedAt(LocalDateTime.now());
+            entity.setDeleteUser(getLoginId());
             return entity;
         });
+    }
+
+    private String getLoginId() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

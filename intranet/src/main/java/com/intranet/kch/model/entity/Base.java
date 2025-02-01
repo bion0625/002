@@ -21,4 +21,8 @@ public abstract class Base {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    private String createUser;
+    private String updateUser;
+    private String deleteUser;
 }

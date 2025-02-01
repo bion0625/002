@@ -62,7 +62,7 @@ public class CompanyController {
             return "/BookingConfirmation/company/insert";
         }
 
-        if (companyService.existByInvoiceAcronym(companyVo.getCompanyInvoiceAcronym())) {
+        if (companyService.existByInvoiceAcronym(companyVo)) {
             result.rejectValue(
                     "companyInvoiceAcronym",
                     "duplicate.companyForm.companyInvoiceAcronym",
@@ -76,7 +76,7 @@ public class CompanyController {
     @PostMapping("/update")
     public String Update(@Valid @ModelAttribute("company") CompanyVo companyVo, BindingResult result, SessionStatus status) {
         if (result.hasErrors()) return "/BookingConfirmation/company/detail";
-        if (companyService.existByInvoiceAcronym(companyVo.getCompanyInvoiceAcronym())) {
+        if (companyService.existByInvoiceAcronym(companyVo)) {
             result.rejectValue(
                     "companyInvoiceAcronym",
                     "duplicate.companyForm.companyInvoiceAcronym",

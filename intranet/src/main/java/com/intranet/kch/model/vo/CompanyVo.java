@@ -23,12 +23,13 @@ public class CompanyVo {
     private String createdAt;
     private String updatedAt;
 
-    public CompanyEntity toEntity() {
+    public CompanyEntity toEntity(String username) {
         CompanyEntity entity = new CompanyEntity();
         entity.setCompanyTitle(this.companyTitle);
         entity.setCompanyName(this.companyName);
         entity.setCompanyAddr(this.companyAddr);
         entity.setCompanyInvoiceAcronym(this.companyInvoiceAcronym);
+        entity.setCreateUser(username);
         return entity;
     }
 
