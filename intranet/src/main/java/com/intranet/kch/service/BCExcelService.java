@@ -11,6 +11,7 @@ import com.intranet.kch.repository.BCExcelRepository;
 import com.intranet.kch.repository.IVExcelRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +56,8 @@ public class BCExcelService {
                     entity.setService(vo.getService());
                     entity.setRemarks01(vo.getRemarks01());
                     entity.setRemarks02(vo.getRemarks02());
+
+                    entity.setUpdateUser(getLoginId());
                     entity.setUpdatedAt(LocalDateTime.now());
 
                     deleteInVoiceListByBCId(entity.getId());
@@ -62,7 +65,7 @@ public class BCExcelService {
                     return entity;
                 }
                 )
-                .orElseGet(() -> bcExcelRepository.save(vo.toEntity()));
+                .orElseGet(() -> bcExcelRepository.save(vo.toEntity(getLoginId())));
 
         BookingConfirmationDto bookingConfirmationDto = BookingConfirmationDto.fromEntity(savedEntity);
 
@@ -82,10 +85,11 @@ public class BCExcelService {
     }
 
     private List<InVoiceDto> saveInVoiceList(List<IVExcelVo> ivExcelVos, String title, Double price, Long bcId, Long totalNights, String start, String end, String signedDate) {
+        String loginId = getLoginId();
         LocalDateTime startDate = LocalDateTime.parse(start);
         List<IVExcelEntity> list = ivExcelVos.stream()
                 .sorted(Comparator.comparing(IVExcelVo::getName))
-                .map(iv -> iv.toEntity(price, bcId, title))
+                .map(iv -> iv.toEntity(price, bcId, title, loginId))
                 .toList();
         for (int i = 0; i < list.size(); i++) {
             list.get(i).setStartDate(startDate);
@@ -134,6 +138,7 @@ public class BCExcelService {
     @Transactional
     public void deleteById(Long id) {
         bcExcelRepository.findById(id).map(entity -> {
+            entity.setDeleteUser(getLoginId());
             entity.setDeletedAt(LocalDateTime.now());
             return entity;
         });
@@ -142,6 +147,13 @@ public class BCExcelService {
 
     private void deleteInVoiceListByBCId(Long bcId) {
         ivExcelRepository.findByBcIdAndDeletedAtIsNull(bcId)
-                .forEach(iv -> iv.setDeletedAt(LocalDateTime.now()));
+                .forEach(iv -> {
+                    iv.setDeletedAt(LocalDateTime.now());
+                    iv.setDeleteUser(getLoginId());
+                });
+    }
+
+    private String getLoginId() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

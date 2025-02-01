@@ -47,7 +47,7 @@ public class BCExcelVo {
 
     private List<IVExcelVo> ivExcelVos;
 
-    public BCExcelEntity toEntity() {
+    public BCExcelEntity toEntity(String loginId) {
         BCExcelEntity entity = new BCExcelEntity();
         entity.setTitle(this.title);
         entity.setCompanyId(this.companyId);
@@ -70,6 +70,8 @@ public class BCExcelVo {
         entity.setService(this.service);
         entity.setRemarks01(this.remarks01);
         entity.setRemarks02(this.remarks02);
+
+        entity.setCreateUser(loginId);
         return entity;
     }
 
