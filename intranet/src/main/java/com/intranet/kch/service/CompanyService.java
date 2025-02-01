@@ -43,6 +43,11 @@ public class CompanyService {
                 .map(CompanyVo::fromEntity);
     }
 
+    public Page<CompanyVo> search(String keyword, Pageable pageable) {
+        return companyRepository.searchByKeyword(keyword , pageable)
+                .map(CompanyVo::fromEntity);
+    }
+
     public CompanyVo getById(Long id) {
         return companyRepository.findById(id)
                 .filter(entity -> entity.getDeletedAt() == null)

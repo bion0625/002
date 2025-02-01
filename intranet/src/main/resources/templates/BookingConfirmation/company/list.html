@@ -14,6 +14,12 @@
     <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
 </div>
 <div>
+    <!-- 검색 폼 -->
+    <form th:action="@{/BookingConfirmation/company}" method="get">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="제목 또는 회사명 검색">
+        <input type="submit" value="검색">
+    </form>
+
     <table>
         <thead>
         <tr>

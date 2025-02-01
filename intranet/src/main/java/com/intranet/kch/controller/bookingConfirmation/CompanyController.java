@@ -3,13 +3,17 @@ package com.intranet.kch.controller.bookingConfirmation;
 import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.service.CompanyService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/BookingConfirmation/company")
@@ -28,12 +32,19 @@ public class CompanyController {
     @GetMapping
     public String company(@RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "10") int size,
+                          @RequestParam(required = false) String keyword,
                           Model model) {
-        model.addAttribute("items", companyService.getAll(
-                PageRequest.of(
-                        page,
-                        size,
-                        Sort.by("createdAt").descending())));
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<CompanyVo> items = Optional.ofNullable(keyword)
+                .filter(k -> !k.trim().isEmpty())
+                .map(k -> {
+                    model.addAttribute("keyword", k);
+                    return companyService.search(k, pageable);
+                })
+                .orElseGet(() -> companyService.getAll(pageable));
+        model.addAttribute("items", items);
         return "BookingConfirmation/company/list";
     }
     @GetMapping("/insert")
