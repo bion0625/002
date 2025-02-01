@@ -26,7 +26,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${items}">
+        <tr th:each="item : ${items.content}">
             <td>
                 <a th:href="@{/BookingConfirmation/excel/{id}(id=${item.id})}"><span th:text="${item.title}">title</span></a>
             </td>
@@ -50,6 +50,16 @@
         </tr>
         </tbody>
     </table>
+    <!-- 페이징 네비게이션 -->
+    <div class="pagination">
+        <a th:if="${items.hasPrevious()}" th:href="@{/BookingConfirmation/company(page=${items.number - 1}, size=${items.size})}">
+            &laquo; Previous
+        </a>
+        <span th:text="${items.number + 1}"></span> / <span th:text="${items.totalPages}"></span>
+        <a th:if="${items.hasNext()}" th:href="@{/BookingConfirmation/company(page=${items.number + 1}, size=${items.size})}">
+            Next &raquo;
+        </a>
+    </div>
     <a href="/BookingConfirmation/excel/insert">INSERT</a>
 </div>
 </body>

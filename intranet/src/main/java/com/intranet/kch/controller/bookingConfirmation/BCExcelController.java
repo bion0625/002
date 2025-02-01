@@ -10,6 +10,8 @@ import com.intranet.kch.util.ExcelPoiUtil;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +41,14 @@ public class BCExcelController {
         model.addAttribute("excel", new BCExcelVo());
     }
     @GetMapping
-    public String excel(Model model) {
-        model.addAttribute("items", bcExcelService.getAll());
+    public String excel(@RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "10") int size,
+                        Model model) {
+        model.addAttribute("items", bcExcelService.getAll(
+                PageRequest.of(
+                        page,
+                        size,
+                        Sort.by("createdAt").descending())));
         return "BookingConfirmation/excel/list";
     }
     @GetMapping("/insert")

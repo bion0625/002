@@ -9,6 +9,8 @@ import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.model.vo.IVExcelVo;
 import com.intranet.kch.repository.BCExcelRepository;
 import com.intranet.kch.repository.IVExcelRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,10 +106,9 @@ public class BCExcelService {
         return ivExcelRepository.saveAll(list).stream().map(InVoiceDto::fromEntity).toList();
     }
 
-    public List<BCExcelVo> getAll() {
-        return bcExcelRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc().stream()
-                .map(BCExcelVo::fromEntity)
-                .toList();
+    public Page<BCExcelVo> getAll(Pageable pageable) {
+        return bcExcelRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc(pageable)
+                .map(BCExcelVo::fromEntity);
     }
 
     public BCExcelVo getById(Long id) {
