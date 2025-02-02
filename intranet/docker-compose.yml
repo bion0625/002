@@ -15,19 +15,6 @@ services:
       - C:/intranetData:/var/lib/postgresql/data
     networks:
       - nat
-  
-  intranet:
-    image: bion0625/intranet:v1
-    restart: on-failure
-    environment:
-      TZ: Asia/Seoul
-      DB_URL: jdbc:postgresql://postgres_intranet_db:5432/kch
-    ports:
-      - "8081:8081"
-    networks:
-      - nat
-    depends_on:
-      - postgresIntranet
 
 volumes:
   postgres_data:
