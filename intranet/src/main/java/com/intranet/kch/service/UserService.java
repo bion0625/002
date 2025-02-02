@@ -25,7 +25,11 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<UserVo> getUserByLoginId(String loginId) {
-        return userRepository.findByLoginIdAndDeletedAtIsNull(loginId).map(UserVo::fromEntity);
+        return userRepository.findByLoginId(loginId).map(UserVo::fromEntity);
+    }
+
+    public Boolean isExistLoginId(String loginId) {
+        return userRepository.findByLoginId(loginId).isPresent();
     }
 
     @Override

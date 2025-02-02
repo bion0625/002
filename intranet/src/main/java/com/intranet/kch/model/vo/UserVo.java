@@ -35,18 +35,24 @@ public class UserVo implements UserDetails {
             message = "전화번호는 7자리 이상 25자리 이하의 숫자 및 허용된 문자만 포함해야 합니다."
     )
     private String phone;
+    private Boolean isAccountNonExpired = true;
 
     public UserEntity toEntity(PasswordEncoder encoder) {
         return new UserEntity(this.loginId, encoder.encode(this.password), this.name, this.email, this.phone);
     }
 
     public static UserVo fromEntity(UserEntity entity) {
-        return new UserVo(entity.getLoginId(), entity.getPassword(), entity.getName(), entity.getEmail(), entity.getPhone());
+        return new UserVo(entity.getLoginId(), entity.getPassword(), entity.getName(), entity.getEmail(), entity.getPhone(), entity.getDeletedAt() == null);
     }
 
     @Override
     public String getUsername() {
         return this.loginId;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.isAccountNonExpired;
     }
 
     @Override

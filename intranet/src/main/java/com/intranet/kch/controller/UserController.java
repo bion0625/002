@@ -34,7 +34,7 @@ public class UserController {
     }
     @PostMapping("/join")
     public String join(@Valid @ModelAttribute("user") UserVo user, BindingResult result, SessionStatus status) {
-        if (userService.getUserByLoginId(user.getUsername()).isPresent()) {
+        if (userService.isExistLoginId(user.getUsername())) {
             result.rejectValue(
                     "loginId",
                     "duplicate.userForm.loginId",
