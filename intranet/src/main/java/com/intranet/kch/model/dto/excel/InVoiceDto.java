@@ -54,7 +54,8 @@ public class InVoiceDto implements ExcelDto {
         excelPoiUtil.setCellStringValue(14, 1, this.service);
         excelPoiUtil.setCellStringValue(14, 4, this.startDate);
         excelPoiUtil.setCellStringValue(14, 6, this.endDate);
-        excelPoiUtil.setCellStringValue(14, 8, this.nights);
+//        excelPoiUtil.setCellStringValue(14, 8, this.nights);
+        excelPoiUtil.setCellStringValue(14, 8, "1");// tax 문제, 무조건 1로 픽스
         excelPoiUtil.setCellDoubleValue(14, 9, Double.parseDouble(this.totalPrice));
         excelPoiUtil.setCellStringValue(35, 1, this.remarks01);
         excelPoiUtil.setCellStringValue(36, 1, this.remarks02);

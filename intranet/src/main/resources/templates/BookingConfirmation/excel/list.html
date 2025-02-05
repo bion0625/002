@@ -25,12 +25,17 @@
     <table>
         <thead>
         <tr>
-            <th>title</th>
-            <th>propertyName</th>
-            <th>guestName</th>
-            <th>수정일</th>
-            <th>등록일</th>
-            <th>삭제버튼</th>
+            <th style="width: 10%">In Voice No</th>
+            <th style="width: 10%">Property Name</th>
+            <th style="width: 10%">Guest Name</th>
+            <th style="width: 25%">Korean Address</th>
+            <th style="width: 3%">Price</th>
+            <th style="width: 7%">SignedDate</th>
+            <th style="width: 7%">Check In</th>
+            <th style="width: 7%">Check Out</th>
+            <th style="width: 7%">수정일</th>
+            <th style="width: 7%">등록일</th>
+            <th style="width: 7%">삭제버튼</th>
         </tr>
         </thead>
         <tbody>
@@ -43,6 +48,21 @@
             </td>
             <td>
                 <span th:text="${item.guestName}">guestName</span>
+            </td>
+            <td>
+                <span th:text="${item.koreanAddress}">koreanAddress</span>
+            </td>
+            <td>
+                <span th:text="${item.price}">price</span>
+            </td>
+            <td>
+                <span th:text="${item.signedDate}">price</span>
+            </td>
+            <td>
+                <span th:text="${#strings.substring(item.checkIn, 0, 10)}">checkIn</span>
+            </td>
+            <td>
+                <span th:text="${#strings.substring(item.checkOut, 0, 10)}">checkIn</span>
             </td>
             <td>
                 <span th:text="${item.updatedAt}">수정일</span>

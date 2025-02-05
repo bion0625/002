@@ -78,8 +78,8 @@ public class BCExcelVo {
     public static BCExcelVo fromEntity(BCExcelEntity entity) {
         return new BCExcelVo(
                 entity.getId(),
-                DateFormatUtil.localDateTimeToString(entity.getCreatedAt(), "yyyy-MM-dd HH:mm:ss"),
-                DateFormatUtil.localDateTimeToString(entity.getUpdatedAt(), "yyyy-MM-dd HH:mm:ss"),
+                DateFormatUtil.localDateTimeToString(entity.getCreatedAt(), "yyyy-MM-dd"),
+                DateFormatUtil.localDateTimeToString(entity.getUpdatedAt(), "yyyy-MM-dd"),
                 entity.getTitle(),
                 entity.getCompanyId(),
                 entity.getPropertyName(),
