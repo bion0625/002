@@ -1,5 +1,6 @@
 package com.intranet.kch.model.vo;
 
+import com.intranet.kch.model.entity.BCExcelAddInfoEntity;
 import com.intranet.kch.model.entity.BCExcelEntity;
 import com.intranet.kch.util.DateFormatUtil;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,20 @@ public class BCExcelVo {
 
     private List<IVExcelVo> ivExcelVos;
 
+    /**
+     * MEMO
+     * */
+    private String houseAddr;
+    private String startDate;
+    private String endDate;
+    private String deposit;
+    private String monthlyRent;
+    private String isTax;
+    private String accountInfo;
+    private String info1;
+    private String info2;
+    private String info3;
+
     public BCExcelEntity toEntity(String loginId) {
         BCExcelEntity entity = new BCExcelEntity();
         entity.setTitle(this.title);
@@ -72,6 +87,22 @@ public class BCExcelVo {
         entity.setRemarks02(this.remarks02);
 
         entity.setCreateUser(loginId);
+        return entity;
+    }
+
+    public BCExcelAddInfoEntity toAddInfoEntity(Long bcId) {
+        BCExcelAddInfoEntity entity = new BCExcelAddInfoEntity();
+        entity.setBcExcelId(bcId);
+        entity.setHouseAddr(this.houseAddr);
+        entity.setStartDate(this.startDate);
+        entity.setEndDate(this.endDate);
+        entity.setDeposit(this.deposit);
+        entity.setMonthlyRent(this.monthlyRent);
+        entity.setIsTax(this.isTax);
+        entity.setAccountInfo(this.accountInfo);
+        entity.setInfo1(this.info1);
+        entity.setInfo2(this.info2);
+        entity.setInfo3(this.info3);
         return entity;
     }
 
@@ -101,6 +132,30 @@ public class BCExcelVo {
                 entity.getService(),
                 entity.getRemarks01(),
                 entity.getRemarks02(),
-                new ArrayList<>());
+                new ArrayList<>(),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "");
+    }
+
+    public BCExcelVo setAddInfoFromEntity(BCExcelAddInfoEntity entity) {
+        this.houseAddr = entity.getHouseAddr();
+        this.startDate = entity.getStartDate();
+        this.endDate = entity.getEndDate();
+        this.deposit = entity.getDeposit();
+        this.monthlyRent = entity.getMonthlyRent();
+        this.isTax = entity.getIsTax();
+        this.accountInfo = entity.getAccountInfo();
+        this.info1 = entity.getInfo1();
+        this.info2 = entity.getInfo2();
+        this.info3 = entity.getInfo3();
+        return this;
     }
 }

@@ -14,6 +14,7 @@
     <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
 </div>
 <div>
+    <h1>COMPANY</h1>
     <form th:action="@{/BookingConfirmation/company/update}" th:method="post" th:object="${company}">
         <label for="companyTitle">제목</label>
         <input id="companyTitle" th:field="*{companyTitle}" type="text" readonly>

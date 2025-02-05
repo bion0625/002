@@ -7,6 +7,7 @@ import com.intranet.kch.model.entity.IVExcelEntity;
 import com.intranet.kch.model.vo.BCExcelVo;
 import com.intranet.kch.model.vo.CompanyVo;
 import com.intranet.kch.model.vo.IVExcelVo;
+import com.intranet.kch.repository.BCExcelAddInfoRepository;
 import com.intranet.kch.repository.BCExcelRepository;
 import com.intranet.kch.repository.IVExcelRepository;
 import org.springframework.data.domain.Page;
@@ -26,11 +27,17 @@ public class BCExcelService {
     private final BCExcelRepository bcExcelRepository;
     private final IVExcelRepository ivExcelRepository;
     private final CompanyService companyService;
+    private final BCExcelAddInfoRepository bcExcelAddInfoRepository;
 
-    public BCExcelService(BCExcelRepository companyRepository, IVExcelRepository ivExcelRepository, CompanyService companyService) {
+    public BCExcelService(
+            BCExcelRepository companyRepository,
+            IVExcelRepository ivExcelRepository,
+            CompanyService companyService,
+            BCExcelAddInfoRepository bcExcelAddInfoRepository) {
         this.bcExcelRepository = companyRepository;
         this.ivExcelRepository = ivExcelRepository;
         this.companyService = companyService;
+        this.bcExcelAddInfoRepository = bcExcelAddInfoRepository;
     }
 
     @Transactional
@@ -61,6 +68,7 @@ public class BCExcelService {
                     entity.setUpdatedAt(LocalDateTime.now());
 
                     deleteInVoiceListByBCId(entity.getId());
+                    deleteAddInfoByBCId(entity.getId());
 
                     return entity;
                 }
@@ -69,7 +77,7 @@ public class BCExcelService {
 
         BookingConfirmationDto bookingConfirmationDto = BookingConfirmationDto.fromEntity(savedEntity);
 
-        CompanyVo company = companyService.getById(savedEntity.getCompanyId());
+        CompanyVo company = companyService.getByIdWithDelete(savedEntity.getCompanyId());
         List<InVoiceDto> inVoiceDtos = saveInVoiceList(vo.getIvExcelVos(), vo.getTitle(), vo.getPrice(), savedEntity.getId(), vo.getTotalNights(), vo.getCheckIn(), vo.getCheckOut(), vo.getSignedDate()).stream()
                 .peek(ivDto -> {
                     ivDto.setService(savedEntity.getService());
@@ -78,6 +86,8 @@ public class BCExcelService {
                     ivDto.setCompanyName(company.getCompanyName());
                     ivDto.setCompanyAddr(company.getCompanyAddr());
                 }).toList();
+
+        bcExcelAddInfoRepository.save(vo.toAddInfoEntity(savedEntity.getId()));
 
         bookingConfirmationDto.setInVoiceDtos(inVoiceDtos);
 
@@ -130,7 +140,9 @@ public class BCExcelService {
                                     .map(IVExcelVo::fromEntity)
                                     .toList()
                     );
-                    return vo;
+                    return bcExcelAddInfoRepository.findByBcExcelIdAndDeletedAtIsNull(vo.getId())
+                            .map(vo::setAddInfoFromEntity)
+                            .orElse(vo);
                 })
                 .orElseThrow(() -> new RuntimeException(id + " is not found"));
     }
@@ -143,6 +155,7 @@ public class BCExcelService {
             return entity;
         });
         deleteInVoiceListByBCId(id);
+        deleteAddInfoByBCId(id);
     }
 
     private void deleteInVoiceListByBCId(Long bcId) {
@@ -150,6 +163,15 @@ public class BCExcelService {
                 .forEach(iv -> {
                     iv.setDeletedAt(LocalDateTime.now());
                     iv.setDeleteUser(getLoginId());
+                });
+    }
+
+    private void deleteAddInfoByBCId(Long bcId) {
+        bcExcelAddInfoRepository.findByBcExcelIdAndDeletedAtIsNull(bcId)
+                .map(info -> {
+                    info.setDeletedAt(LocalDateTime.now());
+                    info.setDeleteUser(getLoginId());
+                    return true;
                 });
     }
 

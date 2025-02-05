@@ -66,7 +66,13 @@ public class CompanyService {
         return companyRepository.findById(id)
                 .filter(entity -> entity.getDeletedAt() == null)
                 .map(CompanyVo::fromEntity)
-                .orElseThrow(() -> new RuntimeException(id + " is not found"));
+                .orElseThrow(() -> new RuntimeException("company: " + id + " is not found"));
+    }
+
+    public CompanyVo getByIdWithDelete(Long id) {
+        return companyRepository.findById(id)
+                .map(CompanyVo::fromEntity)
+                .orElseThrow(() -> new RuntimeException("company: " + id + " is not found"));
     }
 
     @Transactional

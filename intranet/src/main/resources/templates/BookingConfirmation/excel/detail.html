@@ -15,6 +15,8 @@
     <form th:action="@{/logout}" th:method="post"><input type="submit" value="LOGOUT"></form>
 </div>
 <div>
+    <h1>EXCEL</h1>
+    <h2>EXCEL INFO</h2>
     <div id="companyBox">
         <label for="company">COMPANY</label>
         <select id="company">
@@ -102,7 +104,7 @@
             <tr>
                 <td colspan="4">
                     <label for="notice">notice</label>
-                    <textarea rows="5" id="notice" th:field="*{notice}" type="text" required></textarea>
+                    <textarea rows="5" id="notice" th:field="*{notice}" required></textarea>
                 </td>
             </tr>
             <tr>
@@ -138,6 +140,67 @@
         <button type="button" onclick="addIVExcel()">IV Excels: Add</button>
         <button type="button" id="ivExcelsReset">IV Excels: RESET</button>
 
+        <h2>MEMO</h2>
+        <table>
+            <tbody>
+            <tr>
+                <td colspan="4">
+                    <label for="houseAddr">집 주소</label>
+                    <input th:field="*{houseAddr}" id="houseAddr" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="startDate">임대 시작일</label>
+                    <input th:field="*{startDate}" id="startDate" type="date">
+                </td>
+                <td>
+                    <label for="endDate">임대 종료일</label>
+                    <input th:field="*{endDate}" id="endDate" type="date">
+                </td>
+                <td>
+                    <label for="deposit">보증금</label>
+                    <input th:field="*{deposit}" id="deposit" type="number">
+                </td>
+                <td>
+                    <label for="monthlyRent">월세</label>
+                    <input th:field="*{monthlyRent}" id="monthlyRent" type="number">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="isTax">
+                        <input type="checkbox" id="isTax">
+                        부가세 유무
+                    </label>
+                    <input th:field="*{isTax}" id="isTaxValue" type="hidden">
+                </td>
+                <td colspan="3">
+                    <label for="accountInfo">임대인 계좌 정보</label>
+                    <input th:field="*{accountInfo}" id="accountInfo" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <label for="info1">특이사항1</label>
+                    <input th:field="*{info1}" id="info1" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <label for="info2">특이사항2</label>
+                    <input th:field="*{info2}" id="info2" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <label for="info3">특이사항3</label>
+                    <input th:field="*{info3}" id="info3" type="text">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
         <input type="submit" value="EXCEL DOWNLOAD & DATA SAVE">
     </form>
 </div>
@@ -150,6 +213,16 @@
     const totalNights = document.querySelector("#totalNights");
     const price = document.querySelector("#price");
     const totalRent = document.querySelector("#totalRent");
+    const isTax = document.querySelector("#isTax");
+    const isTaxValue = document.querySelector("#isTaxValue");
+
+    isTax.addEventListener("change", () => {
+        if (isTax.checked) isTaxValue.value = "Y";
+        else isTaxValue.value = "N";
+    });
+
+    // 부가세 초깃값 설정
+    isTax.checked = isTaxValue.value === "Y";
 
     checkIn.addEventListener("change", () => {
         if (!isNaN(getCheckDaies())) totalNights.value = getCheckDaies();
