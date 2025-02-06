@@ -26,7 +26,8 @@
     <table>
         <thead>
         <tr>
-            <th style="width: 10%">In Voice No</th>
+            <th style="width: 3%">No</th>
+            <th style="width: 10%">Invoice No</th>
             <th style="width: 10%">Property Name</th>
             <th style="width: 10%">Guest Name</th>
             <th style="width: 25%">Korean Address</th>
@@ -36,11 +37,12 @@
             <th style="width: 7%">Check Out</th>
             <th style="width: 7%">수정일</th>
             <th style="width: 7%">등록일</th>
-            <th style="width: 7%">삭제버튼</th>
+            <th style="width: 4%">삭제버튼</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item : ${items.content}">
+        <tr th:each="item, iterStat : ${items.content}">
+            <td th:text="${(items.number * items.size) + iterStat.count}"></td>
             <td>
                 <a th:href="@{/BookingConfirmation/excel/{id}(id=${item.id})}"><span th:text="${item.title}">title</span></a>
             </td>
