@@ -69,7 +69,7 @@ public class BCExcelController {
         return "BookingConfirmation/excel/detail";
     }
     @PostMapping("/insert")
-    public void save(@ModelAttribute("excel") BCExcelVo bcExcelVo, HttpServletResponse response, SessionStatus status) {
+    public void saveOrUpdate(@ModelAttribute("excel") BCExcelVo bcExcelVo, HttpServletResponse response, SessionStatus status) {
         BookingConfirmationDto bookingConfirmationDto = bcExcelService.saveOrUpdate(bcExcelVo);
         try (ServletOutputStream outputStream = response.getOutputStream();
              ByteArrayOutputStream zipOutputStream = new ByteArrayOutputStream();

@@ -90,7 +90,7 @@ public class BCExcelVo {
         return entity;
     }
 
-    public BCExcelAddInfoEntity toAddInfoEntity(Long bcId) {
+    public BCExcelAddInfoEntity toAddInfoEntity(Long bcId, String loginId) {
         BCExcelAddInfoEntity entity = new BCExcelAddInfoEntity();
         entity.setBcExcelId(bcId);
         entity.setHouseAddr(this.houseAddr);
@@ -103,6 +103,8 @@ public class BCExcelVo {
         entity.setInfo1(this.info1);
         entity.setInfo2(this.info2);
         entity.setInfo3(this.info3);
+
+        entity.setCreateUser(loginId);
         return entity;
     }
 

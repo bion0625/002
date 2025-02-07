@@ -68,7 +68,6 @@ public class BCExcelService {
                     entity.setUpdatedAt(LocalDateTime.now());
 
                     deleteInVoiceListByBCId(entity.getId());
-                    deleteAddInfoByBCId(entity.getId());
 
                     return entity;
                 }
@@ -87,7 +86,7 @@ public class BCExcelService {
                     ivDto.setCompanyAddr(company.getCompanyAddr());
                 }).toList();
 
-        bcExcelAddInfoRepository.save(vo.toAddInfoEntity(savedEntity.getId()));
+        updateOrSaveBCAddInfo(savedEntity.getId(), vo);
 
         bookingConfirmationDto.setInVoiceDtos(inVoiceDtos);
 
@@ -118,6 +117,26 @@ public class BCExcelService {
             startDate = endDate;
         }
         return ivExcelRepository.saveAll(list).stream().map(InVoiceDto::fromEntity).toList();
+    }
+
+    private void updateOrSaveBCAddInfo(Long bcId, BCExcelVo vo) {
+        bcExcelAddInfoRepository.findByBcExcelIdAndDeletedAtIsNull(bcId)
+                .map(info -> {
+                    info.setHouseAddr(vo.getHouseAddr());
+                    info.setStartDate(vo.getStartDate());
+                    info.setEndDate(vo.getEndDate());
+                    info.setDeposit(vo.getDeposit());
+                    info.setMonthlyRent(vo.getMonthlyRent());
+                    info.setIsTax(vo.getIsTax());
+                    info.setAccountInfo(vo.getAccountInfo());
+                    info.setInfo1(vo.getInfo1());
+                    info.setInfo2(vo.getInfo2());
+                    info.setInfo3(vo.getInfo3());
+
+                    info.setUpdateUser(getLoginId());
+                    info.setUpdatedAt(LocalDateTime.now());
+                    return info;
+                }).orElseGet(() -> bcExcelAddInfoRepository.save(vo.toAddInfoEntity(bcId, getLoginId())));
     }
 
     public Page<BCExcelVo> getAll(Pageable pageable) {
