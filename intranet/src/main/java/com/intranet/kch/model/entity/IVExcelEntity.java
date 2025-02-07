@@ -22,4 +22,6 @@ public class IVExcelEntity extends Base {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Double totalPrice;
+    private String isCheck;
+    private String checkDay;
 }

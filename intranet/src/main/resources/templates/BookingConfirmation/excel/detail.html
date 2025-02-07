@@ -134,7 +134,13 @@
             <label>IV Excels</label>
             <div th:each="ivExcel, iterStat : *{ivExcelVos}">
                 <input th:field="*{ivExcelVos[__${iterStat.index}__].name}" placeholder="Name" type="text" required />
-                <input th:field="*{ivExcelVos[__${iterStat.index}__].nights}" placeholder="Nights" type="number" required />
+                <input th:field="*{ivExcelVos[__${iterStat.index}__].nights}" placeholder="Nights" type="number" required th:onkeyup="|ivPriceSetting(this, ${iterStat.index})|" />
+
+                <input th:id="${'ivPrice' + iterStat.index}" readonly type="number"/>
+
+                <input th:field="*{ivExcelVos[__${iterStat.index}__].checkDay}" readonly placeholder="checkDay" type="datetime-local"/>
+                <input th:field="*{ivExcelVos[__${iterStat.index}__].isCheck}" type="checkbox" th:onclick="|checkDaySetting(this, ${iterStat.index})|"/>
+                <input type="hidden" th:name="*{ivExcelVos[__${iterStat.index}__].isCheck}" value="false"/>
             </div>
         </div>
         <button type="button" onclick="addIVExcel()">IV Excels: Add</button>
@@ -216,6 +222,31 @@
     const isTax = document.querySelector("#isTax");
     const isTaxValue = document.querySelector("#isTaxValue");
 
+    const ivExcelsDiv = document.getElementById("ivExcels");
+
+    function ivPriceSetting(target, index) {
+        document.querySelector("#ivPrice" + index).value = new Decimal(price.value).times(Number(target.value)).toFixed(2);
+    }
+
+    function checkDaySetting(target, index) {
+        const checkDay = document.getElementById("ivExcelVos"+index+".checkDay");
+
+        let now = new Date();
+        let offset = now.getTimezoneOffset() * 60000; // getTimezoneOffset()은 분 단위이므로 ms 변환 필요
+        let localDate = new Date(now - offset).toISOString().slice(0, 16);
+
+        if (target.checked) checkDay.value = localDate;
+        else checkDay.value = "";
+    }
+
+    const ivPricePreSetting = () => {
+        for (let i = 0; i < ivExcelsDiv.childElementCount - 1; i++) {
+            document.querySelector("#ivPrice" + i).value = new Decimal(price.value).times(Number(document.getElementById("ivExcelVos"+i+".nights").value)).toFixed(2);
+        }
+    }
+
+    ivPricePreSetting();
+
     isTax.addEventListener("change", () => {
         if (isTax.checked) isTaxValue.value = "Y";
         else isTaxValue.value = "N";
@@ -271,13 +302,17 @@
 
     // 인보이스 페이지 추가
     function addIVExcel() {
-        const ivExcelsDiv = document.getElementById("ivExcels");
+
         const newDiv = document.createElement("div");
 
         const index = ivExcelsDiv.childElementCount; // 현재 항목 수
         newDiv.innerHTML = `
         <input id="ivExcelVos`+(index-1)+`.name" name="ivExcelVos[${index-1}].name" placeholder="Name" type="text" readonly required value="M`+index+`"/>
-        <input id="ivExcelVos`+(index-1)+`.nights" name="ivExcelVos[${index-1}].nights" placeholder="Nights" type="number" required />
+        <input id="ivExcelVos`+(index-1)+`.nights" name="ivExcelVos[${index-1}].nights" placeholder="Nights" type="number" onkeyup="ivPriceSetting(this, `+(index-1)+` )" required />
+        <input id="ivPrice`+(index-1)+`" readonly type="number"/>
+        <input id="ivExcelVos`+(index-1)+`.checkDay" name="ivExcelVos[${index-1}].checkDay" placeholder="checkDay" type="datetime-local" readonly />
+        <input id="ivExcelVos`+(index-1)+`.isCheck1" name="ivExcelVos[${index-1}].isCheck" placeholder="isCheck" type="checkbox" value="true" onclick="checkDaySetting(this,` + (index-1) + ` )" />
+        <input name="_ivExcelVos[${index-1}].isCheck" placeholder="isCheck" type="hidden" required />
     `;
         ivExcelsDiv.appendChild(newDiv);
     }
