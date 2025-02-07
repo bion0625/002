@@ -456,12 +456,11 @@ label[for] {
     color: #333; /* 기본 텍스트 색상 */
 }
 
-/* 특정 input이 readonly 상태일 때 해당 label 스타일 변경 */
-input[readonly] + label,
+/* input[readonly]가 존재하는 경우에만 label 스타일 변경 */
 label[for][readonly],
-label[for]:has(+ input[readonly]) {
-    color: #777 !important; /* 읽기 전용 필드에 대한 label 색상 변경 */
-    font-style: italic; /* 기울임꼴 적용 */
+label[for] + input[readonly] {
+    color: #777 !important;
+    font-style: italic;
 }
 
 /* 테이블 내 읽기 전용 필드 스타일 */
