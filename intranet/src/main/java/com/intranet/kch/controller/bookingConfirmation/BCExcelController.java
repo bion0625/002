@@ -86,7 +86,8 @@ public class BCExcelController {
 
             // ZIP 파일 다운로드 설정
             response.setContentType("application/zip");
-            response.setHeader("Content-Disposition", "attachment; filename=\"excel_files.zip\"");
+            String filename = "BookingConfirmation_" + bcExcelVo.getBookingRequestCompany() + "_" + bcExcelVo.getGuestName() + "_" + bcExcelVo.getSignedDate();
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + ".zip\"");
 
             zos.finish();
             outputStream.write(zipOutputStream.toByteArray());

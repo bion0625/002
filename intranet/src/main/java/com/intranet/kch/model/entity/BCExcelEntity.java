@@ -33,6 +33,7 @@ public class BCExcelEntity extends Base {
     private String bookedBy;
     private String bookingRequestCompany;
     private String extensionOfLease;
+    @Column(columnDefinition = "TEXT")
     private String notice;
     private String signedDate;
 

@@ -71,6 +71,8 @@ public class BookingConfirmationDto implements ExcelDto {
         excelPoiUtil.setCellStringValue(26, 3,  this.ofGuests);
         excelPoiUtil.setCellStringValue(27, 3,  this.bookedBy);
         excelPoiUtil.setCellStringValue(28, 3,  this.bookingRequestCompany);
+        excelPoiUtil.setCellStringValue(29, 3,  "Room rental bill to " + this.bookingRequestCompany + " and all other non-inclusive");
+        excelPoiUtil.setCellStringValue(30, 3,  "incidental expenses to be billed to guest own account");
         excelPoiUtil.setCellStringValue(32, 3,  this.extensionOfLease);
 
         String[] notices = this.notice.split("\n");

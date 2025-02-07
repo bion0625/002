@@ -90,11 +90,11 @@
                 </td>
                 <td>
                     <label for="bookedBy">bookedBy</label>
-                    <input id="bookedBy" th:field="*{bookedBy}" type="text" readonly required>
+                    <input id="bookedBy" th:field="*{bookedBy}" type="text" required>
                 </td>
                 <td>
                     <label for="bookingRequestCompany">bookingRequestCompany</label>
-                    <input id="bookingRequestCompany" th:field="*{bookingRequestCompany}" type="text" required>
+                    <input id="bookingRequestCompany" th:field="*{bookingRequestCompany}" type="text" readonly required>
                 </td>
                 <td>
                     <label for="extensionOfLease">extensionOfLease</label>
@@ -247,7 +247,7 @@
     const companyNameHandler = () => {
         const companyName = company.value;
         if (companyName!=="") {
-            document.querySelector("#bookedBy").value = companyName;
+            document.querySelector("#bookingRequestCompany").value = companyName;
             document.querySelector("#companyId").value = company.options[company.selectedIndex].dataset.id;
             const now = new Date();
             const time = String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0'); // 두 자리로 포맷
