@@ -133,7 +133,7 @@
         <div id="ivExcels">
             <label>IV Excels</label>
             <div th:each="ivExcel, iterStat : *{ivExcelVos}">
-                <input th:field="*{ivExcelVos[__${iterStat.index}__].name}" placeholder="Name" type="text" required />
+                <input th:field="*{ivExcelVos[__${iterStat.index}__].name}" placeholder="Name" type="text" readonly required />
                 <input th:field="*{ivExcelVos[__${iterStat.index}__].nights}" placeholder="Nights" type="number" required th:onkeyup="|ivPriceSetting(this, ${iterStat.index})|" />
 
                 <input th:id="${'ivPrice' + iterStat.index}" readonly type="number"/>
