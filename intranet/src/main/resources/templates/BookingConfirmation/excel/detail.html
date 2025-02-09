@@ -23,7 +23,7 @@
             <option th:data-id="${company.id}" th:data-acronym="${company.companyInvoiceAcronym}" th:each="company : ${companies}" th:text="${company.companyTitle}" th:value="${company.companyName}"></option>
         </select>
     </div>
-    <form th:action="@{/BookingConfirmation/excel/insert}" th:method="post" th:object="${excel}" onsubmit="return validateSumNights()">
+    <form id="excelForm" th:action="@{/BookingConfirmation/excel/insert}" th:method="post" th:object="${excel}" onsubmit="return validateSumNights()">
         <table>
             <tbody>
             <tr>
@@ -145,6 +145,7 @@
         </div>
         <button type="button" onclick="addIVExcel()">IV Excels: Add</button>
         <button type="button" id="ivExcelsReset">IV Excels: RESET</button>
+        <button type="button" id="downloadExcelButton">EXCEL DOWNLOAD & DATA SAVE</button>
 
         <h2>MEMO</h2>
         <table>
@@ -207,10 +208,19 @@
             </tbody>
         </table>
 
-        <input type="submit" value="EXCEL DOWNLOAD & DATA SAVE">
+        <button type="button" id="saveDataButton">DATA SAVE</button>
     </form>
 </div>
 <script>
+    document.getElementById("saveDataButton").addEventListener("click", function () {
+        document.getElementById("excelForm").action = "/BookingConfirmation/excel/insert";
+        document.getElementById("excelForm").submit();
+    });
+
+    document.getElementById("downloadExcelButton").addEventListener("click", function () {
+        document.getElementById("excelForm").action = "/BookingConfirmation/excel/download";
+        document.getElementById("excelForm").submit();
+    });
     const title = document.querySelector("#title");
     const titleInit = document.querySelector("#title-init");
     const titleTail = document.querySelector("#title-tail");

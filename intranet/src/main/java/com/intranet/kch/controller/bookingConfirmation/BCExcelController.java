@@ -68,8 +68,8 @@ public class BCExcelController {
         model.addAttribute("companies", companies);
         return "BookingConfirmation/excel/detail";
     }
-    @PostMapping("/insert")
-    public void saveOrUpdate(@ModelAttribute("excel") BCExcelVo bcExcelVo, HttpServletResponse response, SessionStatus status) {
+    @PostMapping("/download")
+    public void saveOrUpdateAndExcelDownload(@ModelAttribute("excel") BCExcelVo bcExcelVo, HttpServletResponse response, SessionStatus status) {
         BookingConfirmationDto bookingConfirmationDto = bcExcelService.saveOrUpdate(bcExcelVo);
         try (ServletOutputStream outputStream = response.getOutputStream();
              ByteArrayOutputStream zipOutputStream = new ByteArrayOutputStream();
@@ -97,6 +97,11 @@ public class BCExcelController {
         } finally {
             status.setComplete();
         }
+    }
+    @PostMapping("/insert")
+    public String saveOrUpdate(@ModelAttribute("excel") BCExcelVo bcExcelVo) {
+        bcExcelService.saveOrUpdate(bcExcelVo);
+        return "redirect:/BookingConfirmation/excel";
     }
     private void addFileToZip(String fileName, byte[] fileData, ZipOutputStream zos) throws IOException {
         ZipEntry zipEntry = new ZipEntry(fileName);
