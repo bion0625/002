@@ -1,0 +1,57 @@
+/* 기본 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+/* 버튼 스타일 */
+button {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* 로그 출력 창 스타일 */
+pre {
+    width: 80%;
+    height: 400px;
+    margin: 20px auto;
+    padding: 15px;
+    background: #2e2e2e;
+    color: #dcdcdc;
+    font-size: 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    overflow-y: auto;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+/* 반응형 스타일 (모바일 최적화) */
+@media (max-width: 768px) {
+    pre {
+        width: 95%;
+        height: 300px;
+    }
+
+    button {
+        width: 90%;
+        padding: 10px;
+    }
+}
