@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOCKER-COMPOSE:RESTART</title>
+    <link rel="stylesheet" th:href="@{/css/intranet.css}"/>
+	<style>
+		/* 전체 페이지 스타일 */
+		body {
+		    font-family: Arial, sans-serif;
+		    background-color: #f4f4f4;
+		    margin: 0;
+		    padding: 20px;
+		    text-align: center;
+		}
+
+		/* 로그 출력 영역 스타일 */
+		pre {
+		    width: 80%;
+		    height: 400px;
+		    overflow-y: auto;
+		    background: #2e2e2e;
+		    color: #dcdcdc;
+		    padding: 15px;
+		    border-radius: 8px;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		    font-size: 14px;
+		    text-align: left;
+		    margin: 20px auto;
+		    white-space: pre-wrap; /* 자동 줄바꿈 */
+		}
+
+		/* 버튼 스타일 */
+		input[type="submit"] {
+		    background-color: #007bff;
+		    color: white;
+		    border: none;
+		    padding: 12px 20px;
+		    font-size: 16px;
+		    border-radius: 5px;
+		    cursor: pointer;
+		    transition: background 0.3s;
+		}
+
+		input[type="submit"]:hover {
+		    background-color: #0056b3;
+		}
+
+		/* 반응형 디자인 */
+		@media (max-width: 768px) {
+		    pre {
+		        width: 95%;
+		        height: 300px;
+		    }
+		    
+		    input[type="submit"] {
+		        width: 90%;
+		        padding: 10px;
+		    }
+		}
+
+	</style>
+</head>
+<body>
+    <form method="post">
+        <pre th:text="${message}">Docker Compose Logs will appear here...</pre>
+        <input type="submit" value="intranet-restart"/>
+    </form>
+</body>
+</html>
