@@ -5,15 +5,15 @@
     <title>DOCKER-COMPOSE:RESTART</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <script>
-        function restartDocker() {
+        function sendDockerCommand(endpoint) {
             const logArea = document.getElementById("logArea");
-            logArea.innerHTML = "🚀 Restarting Docker Compose...\n";
+            logArea.innerHTML = `🚀 Executing ${endpoint}...\n`;
 
-            const eventSource = new EventSource("/restart-docker");
+            const eventSource = new EventSource(`/${endpoint}`);
 
             eventSource.onmessage = function(event) {
-                logArea.innerHTML += event.data + "\n\n";  // 10줄씩 추가
-                logArea.scrollTop = logArea.scrollHeight;  // 자동 스크롤
+                logArea.innerHTML += event.data + "\n\n";
+                logArea.scrollTop = logArea.scrollHeight;
             };
 
             eventSource.onerror = function() {
@@ -24,7 +24,9 @@
     </script>
 </head>
 <body>
-    <button onclick="restartDocker()">Intranet Restart</button>
-    <pre id="logArea" style="width: 100%; height: 400px; overflow-y: scroll; background: #2e2e2e; color: #dcdcdc; padding: 10px;"></pre>
+<button onclick="sendDockerCommand('restart-docker')">Restart Docker</button>
+<button onclick="sendDockerCommand('docker-down')">Docker Down</button>
+<button onclick="sendDockerCommand('docker-up')">Docker Up</button>
+<pre id="logArea" style="width: 100%; height: 400px; overflow-y: scroll; background: #2e2e2e; color: #dcdcdc; padding: 10px;"></pre>
 </body>
 </html>

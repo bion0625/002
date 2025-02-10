@@ -16,6 +16,20 @@ public class DockerComposeController {
 
     @GetMapping(value = "/restart-docker", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> restartDocker() {
+        return executeDockerCommand("docker-compose down && docker-compose up --pull always");
+    }
+
+    @GetMapping(value = "/docker-down", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> dockerDown() {
+        return executeDockerCommand("docker-compose down");
+    }
+
+    @GetMapping(value = "/docker-up", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> dockerUp() {
+        return executeDockerCommand("docker-compose up -d --pull always");
+    }
+
+    private Flux<String> executeDockerCommand(String command) {
         return Flux.create(sink -> Executors.newSingleThreadExecutor().submit(() -> {
             try {
                 // 운영 체제 감지
@@ -23,9 +37,9 @@ public class DockerComposeController {
                 ProcessBuilder processBuilder;
 
                 if (os.contains("win")) {
-                    processBuilder = new ProcessBuilder("cmd.exe", "/c", "cd .. && docker-compose down && docker-compose up --pull always");
+                    processBuilder = new ProcessBuilder("cmd.exe", "/c", "cd .. && " + command);
                 } else {
-                    processBuilder = new ProcessBuilder("sh", "-c", "cd .. && docker-compose down && docker-compose up --pull always");
+                    processBuilder = new ProcessBuilder("sh", "-c", "cd .. && " + command);
                 }
 
                 // 프로세스 실행
@@ -37,12 +51,12 @@ public class DockerComposeController {
 
                 // 표준 출력 로그
                 while ((line = reader.readLine()) != null) {
-                    sink.next(line + "\n"); // 개행 추가하여 줄 간격 문제 해결
+                    sink.next(line + "\n");
                 }
 
                 // 에러 출력 로그
                 while ((line = errorReader.readLine()) != null) {
-                    sink.next("[ERROR] " + line + "\n"); // 에러 로그도 개행 포함
+                    sink.next("[ERROR] " + line + "\n");
                 }
 
                 int exitCode = process.waitFor();
@@ -50,9 +64,9 @@ public class DockerComposeController {
                 String timestamp = LocalDateTime.now().format(formatter);
 
                 if (exitCode == 0) {
-                    sink.next("\n✅ Docker Compose restarted successfully! (" + timestamp + ")");
+                    sink.next("\n✅ Command executed successfully! (" + timestamp + ")");
                 } else {
-                    sink.next("\n❌ Error restarting Docker Compose! (" + timestamp + ")");
+                    sink.next("\n❌ Error executing command! (" + timestamp + ")");
                 }
 
                 sink.complete();
